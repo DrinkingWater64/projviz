@@ -1,16 +1,15 @@
 import * as THREE from "three";
-import { GLTFLoader, Wireframe } from "three/examples/jsm/Addons.js";
 import {
+  GLTFLoader,
   OrbitControls,
   TransformControls,
   SelectionBox,
   SelectionHelper,
 } from "three/examples/jsm/Addons.js";
 
-//States
+// States
 let isSelecting = false;
 let MultiSelectMode = false;
-
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
