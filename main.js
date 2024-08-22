@@ -8,6 +8,10 @@ import {
 } from "three/examples/jsm/Addons.js";
 import {} from "three/examples/jsm/Addons.js";
 
+//States
+let isSelecting = false;
+let MultiSelectMode = false;
+
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
@@ -53,18 +57,14 @@ scene.add(transformControl);
 
 // Initialize SelectionBox and SelectionHelper
 const selectionBox = new SelectionBox(camera, scene);
-const selectionHelper = new SelectionHelper(renderer, "selectBox");
-
-
-
-//States
-let isSelecting = false;
-let MultiSelectMode = false;
+const selectionHelper = null;
 
 // Mouse down event to start selection
 window.addEventListener("mousedown", (event) => {
   if (!MultiSelectMode) {
     return;
+  } else {
+    // selectionHelper = new SelectionHelper(renderer, "selectBox");
   }
 
   isSelecting = true;
@@ -75,7 +75,7 @@ window.addEventListener("mousedown", (event) => {
     0.5
   );
 
-  selectionHelper.onPointerDown(event);
+  // selectionHelper.onPointerDown(event);
 });
 
 // Mouse move event to update selection box
@@ -92,7 +92,7 @@ window.addEventListener("mousemove", (event) => {
     selectionBox.select(); // Select objects within the box
   }
 
-  selectionHelper.onPointerMove(event);
+  // selectionHelper.onPointerMove(event);
 });
 
 // Mouse up event to finalize selection and attach TransformControls
@@ -114,12 +114,11 @@ window.addEventListener("mouseup", () => {
     ) {
       // object.material = new THREE.MeshBasicMaterial({ wireframe: true });
       // transformControl.attach(object);
-      AddMeshToGroup(group, object)
+      AddMeshToGroup(group, object);
     }
   });
   scene.add(group);
   transformControl.attach(group);
-  // selectionHelper.onPointerUp()
 });
 
 //Mouse control
@@ -127,8 +126,8 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 window.addEventListener("click", () => {
-  if(MultiSelectMode){
-    return
+  if (MultiSelectMode) {
+    return;
   }
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -140,8 +139,12 @@ window.addEventListener("click", () => {
 
   if (intersects.length > 0) {
     const selectedObject = intersects[0];
-    console.log(selectedObject.object.tag);
-    if (selectedObject.object instanceof THREE.Mesh) {
+    console.log(transformControl.object);
+    if (
+      selectedObject.object instanceof THREE.Mesh &&
+      (selectedObject.object.tag == "box" ||
+        selectedObject.object.parent.tag == "box")
+    ) {
       transformControl.attach(selectedObject.object);
       control.enabled = false;
     }
@@ -157,14 +160,12 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-
 window.addEventListener("keypress", (event) => {
   console.log(event);
   if (event.key === "1") {
-    MultiSelectMode = !MultiSelectMode
+    MultiSelectMode = !MultiSelectMode;
   }
 });
-
 
 // Grid helper
 // const gridSize = 100
@@ -198,13 +199,13 @@ const AddTagToMesh = (object, tag) => {
 };
 
 const AddMeshToGroup = (group, mesh) => {
-  group.children.forEach((child) =>{
+  group.children.forEach((child) => {
     if (child === mesh) {
-      return
+      return;
     }
-  })
-  group.add(mesh)
-}
+  });
+  group.add(mesh);
+};
 
 // Resize event listener
 export function onWindowResize() {
