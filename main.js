@@ -237,7 +237,10 @@ window.addEventListener("keypress", (event) => {
       break;
     case 'r':
       transformControl.setMode('scale');
-      break
+      break;
+    case 'g':
+      gridHelper.visible = !gridHelper.visible;
+
   }
 });
 
@@ -264,7 +267,7 @@ const LoadModel = (path, gLTFLoader) => {
     scene.add(gltf.scene);
   })
 }
-LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+// LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
 // loader.load("https://localhost:7133/api/Model/TestRoom.glb", (gltf) => {
 //   AddTagToMesh(gltf.scene, "box");
 //   scene.add(gltf.scene);
@@ -380,10 +383,10 @@ window.addEventListener("resize", onWindowResize);
 
 /**
  * Loads model in console
- * @param {Strin} path 
+ * @param {Strin} name 
  */
-export const LMC = (path) => {
-  LoadModel(path, loader)
+export const LMC = (name) => {
+  LoadModel("https://localhost:7133/api/Model/"+name+".gltf", loader)
 };
 
 window.LMC = LMC
