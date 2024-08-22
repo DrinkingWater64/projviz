@@ -16,6 +16,14 @@ let SelectMode = false;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
 
+
+// Ambient Light
+const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+scene.add(ambientLight)
+
+
+
+// test box
 const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
 const boxmaterial = new THREE.MeshBasicMaterial();
 const box = new THREE.Mesh(boxGeoemetry, boxmaterial);
@@ -35,6 +43,9 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
+camera.near = .01
+camera.far = 2000
+camera.updateProjectionMatrix()
 camera.position.z = 10;
 scene.add(camera);
 
@@ -58,7 +69,9 @@ scene.add(transformControl);
 
 // Initialize SelectionBox and SelectionHelper
 const selectionBox = new SelectionBox(camera, scene);
-const selectionHelper = null;
+let selectionHelper = new SelectionHelper(renderer, "selectBox");
+selectionHelper.dispose();
+// new SelectionHelper(renderer, "selectBox");
 
 // Mouse down event to start selection
 
@@ -76,14 +89,27 @@ window.addEventListener("mousedown", (event) => {
   isDragging = false;
 
 
+  // if (MultiSelectMode) {
+  //   selectionHelper = new SelectionHelper(renderer, "selectBox");
+  // }
+
   if (MultiSelectMode) {
+
+    console.log("started multi select")
+    selectionHelper.onPointerDown(event)
+
+
     isSelecting = true;
+    control.enabled = false;
     transformControl.detach(); // Detach any currently attached object
     selectionBox.startPoint.set(
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1,
       0.5
     );
+
+    console.log("ended multi select")
+
   }
 
   // selectionHelper.onPointerDown(event);
@@ -100,6 +126,7 @@ window.addEventListener("mousemove", (event) => {
 
   if (MultiSelectMode) {
     if (isSelecting) {
+      selectionHelper.onPointerMove(event)
       selectionBox.endPoint.set(
         (event.clientX / window.innerWidth) * 2 - 1,
         -(event.clientY / window.innerHeight) * 2 + 1,
@@ -109,7 +136,6 @@ window.addEventListener("mousemove", (event) => {
     }
   }
 
-  // selectionHelper.onPointerMove(event);
 });
 
 // Mouse up event to finalize selection and attach TransformControls
@@ -119,6 +145,8 @@ window.addEventListener("mouseup", () => {
 
 
   if (MultiSelectMode ) {
+    selectionHelper.onPointerUp();
+    control.enabled = true
     isSelecting = false;
     const selectedObjects = selectionBox.select(); // Get selected objects
 
@@ -137,6 +165,7 @@ window.addEventListener("mouseup", () => {
     });
     scene.add(group);
     transformControl.attach(group);
+
   }
 });
 
@@ -152,7 +181,13 @@ window.addEventListener("click", () => {
 
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(scene.children);
-  DrawRaycasterDebug(raycaster, intersects)
+
+
+  //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
+  // DrawRaycasterDebug(raycaster, intersects)
+  //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
+
+
   console.log(intersects)
   const filteredObjects = FindObjectWithTag(intersects, "box")
   if (filteredObjects.length > 0) {
@@ -168,7 +203,7 @@ window.addEventListener("click", () => {
   }
 });
 
-// keyboard control
+// keyboard control...........................................................................................................................................
 window.addEventListener("keypress", (event) => {
   // console.log(event);
   if (event.key === "`") {
@@ -178,21 +213,20 @@ window.addEventListener("keypress", (event) => {
 });
 
 window.addEventListener("keypress", (event) => {
-  // console.log(event);
   if (event.key === "1") {
     MultiSelectMode = !MultiSelectMode;
   }
 });
 
 // Grid helper
-// const gridSize = 100
-// const gridDivision = 100
-// const gridHelper = new THREE.GridHelper(gridSize, gridDivision)
-// scene.add(gridHelper)
+const gridSize = 100
+const gridDivision = 100
+const gridHelper = new THREE.GridHelper(gridSize, gridDivision)
+scene.add(gridHelper)
 
 // Load model
 const loader = new GLTFLoader();
-loader.load("https://localhost:7133/api/Model/scene.gltf", (gltf) => {
+loader.load("https://localhost:7133/api/Model/TestRoom.glb", (gltf) => {
   AddTagToMesh(gltf.scene, "box");
   scene.add(gltf.scene);
   // transformControl.attach(gltf.scene)
