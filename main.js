@@ -10,7 +10,6 @@ import {
 //States
 let isSelecting = false;
 let MultiSelectMode = false;
-let SelectMode = false;
 
 // Scene
 const scene = new THREE.Scene();
@@ -33,7 +32,7 @@ box.translateX(10);
 scene.add(box);
 
 // Group selection group
-const group = new THREE.Group();
+let group = new THREE.Group();
 
 //camera
 
@@ -95,7 +94,9 @@ window.addEventListener("mousedown", (event) => {
 
   if (MultiSelectMode) {
 
-    console.log("started multi select")
+    ClearGroup(group);
+
+
     selectionHelper.onPointerDown(event)
 
 
@@ -108,7 +109,6 @@ window.addEventListener("mousedown", (event) => {
       0.5
     );
 
-    console.log("ended multi select")
 
   }
 
@@ -135,7 +135,6 @@ window.addEventListener("mousemove", (event) => {
       selectionBox.select(); // Select objects within the box
     }
   }
-
 });
 
 // Mouse up event to finalize selection and attach TransformControls
@@ -163,8 +162,18 @@ window.addEventListener("mouseup", () => {
         AddMeshToGroup(group, object);
       }
     });
-    scene.add(group);
-    transformControl.attach(group);
+    if (group.children.length > 0) {
+      scene.add(group);
+      transformControl.attach(group);
+      control.enabled = false;
+    }else{
+      scene.remove(group);
+      transformControl.detach();
+      control.enabled = true;
+    }
+
+    
+
 
   }
 });
@@ -188,7 +197,6 @@ window.addEventListener("click", () => {
   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
 
 
-  console.log(intersects)
   const filteredObjects = FindObjectWithTag(intersects, "box")
   if (filteredObjects.length > 0) {
     const selectedObject = filteredObjects[0];
@@ -218,6 +226,30 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
+window.addEventListener("keypress", (event) => {
+  
+  switch(event.key) {
+    case 'w':
+      transformControl.setMode('translate');
+      break;
+    case 'e':
+      transformControl.setMode('rotate');
+      break;
+    case 'r':
+      transformControl.setMode('scale');
+      break
+  }
+});
+
+// DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD--- Debug key ---DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+window.addEventListener("keypress", (event) => {
+  if (event.key === "c") {
+    console.log(scene.children);
+  }
+});
+
+
+
 // Grid helper
 const gridSize = 100
 const gridDivision = 100
@@ -226,11 +258,18 @@ scene.add(gridHelper)
 
 // Load model
 const loader = new GLTFLoader();
-loader.load("https://localhost:7133/api/Model/TestRoom.glb", (gltf) => {
-  AddTagToMesh(gltf.scene, "box");
-  scene.add(gltf.scene);
-  // transformControl.attach(gltf.scene)
-});
+const LoadModel = (path, gLTFLoader) => {
+  gLTFLoader.load(path, (gltf) => {
+    AddTagToMesh(gltf.scene, "box");
+    scene.add(gltf.scene);
+  })
+}
+LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+// loader.load("https://localhost:7133/api/Model/TestRoom.glb", (gltf) => {
+//   AddTagToMesh(gltf.scene, "box");
+//   scene.add(gltf.scene);
+//   // transformControl.attach(gltf.scene)
+// });
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
@@ -268,6 +307,21 @@ const AddMeshToGroup = (group, mesh) => {
   group.add(mesh);
 };
 
+
+/**
+ * Empties the group and add the children back to the scene
+ * @param {THREE.Group} group 
+ */
+const ClearGroup = (group) => {
+
+  while(group.children.length > 0) {
+    const child = group.children[0];
+    group.remove(child);
+    scene.add(child);
+  }
+  group = new THREE.Group();
+}
+
 /**
  * Takes a list of object and finds the object with specified tags
  * @param {Array} objects 
@@ -276,7 +330,6 @@ const AddMeshToGroup = (group, mesh) => {
  */
 const FindObjectWithTag = (objects, tag) => {
   const fileteredObjects = objects.filter(object => object.object.tag===tag)
-  console.log(fileteredObjects)
   return fileteredObjects;
 }
 
@@ -324,3 +377,13 @@ export function onWindowResize() {
   renderer.render(scene, camera);
 }
 window.addEventListener("resize", onWindowResize);
+
+/**
+ * Loads model in console
+ * @param {Strin} path 
+ */
+export const LMC = (path) => {
+  LoadModel(path, loader)
+};
+
+window.LMC = LMC
