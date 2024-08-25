@@ -26,7 +26,7 @@ const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
 const boxmaterial = new THREE.MeshBasicMaterial();
 const box = new THREE.Mesh(boxGeoemetry, boxmaterial);
 box.tag = "box";
-box.translateX(10);
+box.translateX(3);
 
 scene.add(box);
 
@@ -207,6 +207,9 @@ window.addEventListener("click", () => {
       transformControl.attach(selectedObject.object);
       control.enabled = false;
     }
+  } else {
+    transformControl.detach();
+    control.enabled = true;
   }
 });
 
@@ -266,13 +269,7 @@ const LoadModel = (path, gLTFLoader) => {
     scene.add(gltf.scene);
   })
 }
-// LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
-// loader.load("https://localhost:7133/api/Model/TestRoom.glb", (gltf) => {
-//   AddTagToMesh(gltf.scene, "box");
-//   scene.add(gltf.scene);
-//   // transformControl.attach(gltf.scene)
-// });
-
+LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
 const animate = () => {
