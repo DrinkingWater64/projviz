@@ -13,7 +13,6 @@ class TagHelper {
  */
   FindObjectsWithTag(objects) {
     const fileteredObjects = objects.filter(object => object.object.tag === this.#tag)
-    console.log("filtered")
     return fileteredObjects
   }
 
