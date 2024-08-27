@@ -1,11 +1,13 @@
 import * as THREE from "three";
 import {
-  GLTFLoader,
   OrbitControls,
   TransformControls,
   SelectionBox,
   SelectionHelper,
 } from "three/examples/jsm/Addons.js";
+import DebugDraw from "./src/Debug/DebugDraw";
+
+
 
 // States
 let isSelecting = false;
@@ -156,8 +158,6 @@ window.addEventListener("mouseup", () => {
         object instanceof THREE.Mesh &&
         (object.tag == "box" || object.parent.tag == "box")
       ) {
-        // object.material = new THREE.MeshBasicMaterial({ wireframe: true });
-        // transformControl.attach(object);
         AddMeshToGroup(group, object);
       }
     });
@@ -192,8 +192,11 @@ window.addEventListener("click", () => {
 
 
   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-  // DrawRaycasterDebug(raycaster, intersects)
+  // const debugdraw = new DebugDraw(100, 0x00ff00, .1)
+  // debugdraw.DrawLine(raycaster, scene)
+  // debugdraw.DrawImpact(raycaster, scene)
   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
+
 
 
   const filteredObjects = FindObjectWithTag(intersects, "box")
@@ -262,14 +265,18 @@ const gridHelper = new THREE.GridHelper(gridSize, gridDivision)
 scene.add(gridHelper)
 
 // Load model
-const loader = new GLTFLoader();
-const LoadModel = (path, gLTFLoader) => {
-  gLTFLoader.load(path, (gltf) => {
-    AddTagToMesh(gltf.scene, "box");
-    scene.add(gltf.scene);
-  })
-}
-LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+// const loader = new GLTFLoader();
+// const LoadModel = (path, gLTFLoader) => {
+//   gLTFLoader.load(path, (gltf) => {
+//     console.log(gltf)
+//     AddTagToMesh(gltf.scene, "box");
+//     scene.add(gltf.scene);
+//   })
+// }
+// LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+
+
+
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
 const animate = () => {
@@ -280,17 +287,7 @@ const animate = () => {
 animate();
 
 
-/**
- * Adds tag to a object
- * @param {*} object 
- * @param {String} tag 
- */
-const AddTagToMesh = (object, tag) => {
-  object.tag = tag;
-  object.children.forEach((child) => {
-    AddTagToMesh(child, tag);
-  });
-};
+
 
 /**
  * Adds meshes to group with defined conditions in it.
@@ -332,39 +329,17 @@ const FindObjectWithTag = (objects, tag) => {
   return fileteredObjects;
 }
 
-
 /**
- * Draw a line and a sphere at on a intersected point for debug purpose.
- * @param {THREE.Raycaster} raycaster 
- * @param {Array} intersects Intercted objects from a ray caster
+ * Adds tag to a object
+ * @param {*} object 
+ * @param {String} tag 
  */
-const DrawRaycasterDebug = (raycaster, intersects) => {
-  const length = 100;
-
-
-  const origin = raycaster.ray.origin
-  const direction = raycaster.ray.direction.clone().normalize().multiplyScalar(length);
-
-
-  const geometry = new THREE.BufferGeometry().setFromPoints([origin, origin.clone().add(direction)])
-  const material = new THREE.LineBasicMaterial({color: 0xff0000})
-  const rayLine = new THREE.Line(geometry, material)
-
-  scene.add(rayLine)
-
-
-  if (intersects.length > 0) {
-    console.log("added sphere")
-    const intersectPoint = intersects[0].point;
-
-    const sphereGeometry = new THREE.SphereGeometry(0.1, 16, 16);
-    const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const intersectionSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-
-    intersectionSphere.position.copy(intersectPoint);
-    scene.add(intersectionSphere);
-  }
-}
+const AddTagToMesh = (object, tag) => {
+  object.tag = tag;
+  object.children.forEach((child) => {
+    AddTagToMesh(child, tag);
+  });
+};
 
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
