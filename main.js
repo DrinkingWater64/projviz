@@ -9,6 +9,7 @@ import {
 import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
 import TransformGizmo from "./src/core/TransformGizmo";
+import GridView from "./src/util/GridView";
 
 // States
 let isSelecting = false;
@@ -219,10 +220,9 @@ window.addEventListener("keypress", (event) => {
 });
 
 // Grid helper
-const gridSize = 100;
-const gridDivision = 100;
-const gridHelper = new THREE.GridHelper(gridSize, gridDivision);
-scene.add(gridHelper);
+
+const gridHelper = new GridView(scene, 50, 10);
+
 
 // Load model
 const boxTag = new TagHelper("box");
