@@ -1,11 +1,13 @@
 import * as THREE from "three";
 import {
+  GLTFLoader,
   OrbitControls,
   TransformControls,
   SelectionBox,
   SelectionHelper,
 } from "three/examples/jsm/Addons.js";
 import DebugDraw from "./src/Debug/DebugDraw";
+import TagHelper from "./src/util/TagHelper";
 
 
 
@@ -199,7 +201,7 @@ window.addEventListener("click", () => {
 
 
 
-  const filteredObjects = FindObjectWithTag(intersects, "box")
+  const filteredObjects = boxTag.FindObjectsWithTag(intersects)
   if (filteredObjects.length > 0) {
     const selectedObject = filteredObjects[0];
     if (
@@ -265,15 +267,17 @@ const gridHelper = new THREE.GridHelper(gridSize, gridDivision)
 scene.add(gridHelper)
 
 // Load model
-// const loader = new GLTFLoader();
-// const LoadModel = (path, gLTFLoader) => {
-//   gLTFLoader.load(path, (gltf) => {
-//     console.log(gltf)
-//     AddTagToMesh(gltf.scene, "box");
-//     scene.add(gltf.scene);
-//   })
-// }
-// LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+const boxTag = new TagHelper("box")
+
+const loader = new GLTFLoader();
+const LoadModel = (path, gLTFLoader) => {
+  gLTFLoader.load(path, (gltf) => {
+    console.log(gltf)
+    boxTag.AddTag(gltf.scene)
+    scene.add(gltf.scene);
+  })
+}
+LoadModel("https://localhost:7133/api/Model/scene.gltf", loader);
 
 
 
@@ -317,30 +321,6 @@ const ClearGroup = (group) => {
   }
   group = new THREE.Group();
 }
-
-/**
- * Takes a list of object and finds the object with specified tags
- * @param {Array} objects 
- * @param {String} tag 
- * @returns 
- */
-const FindObjectWithTag = (objects, tag) => {
-  const fileteredObjects = objects.filter(object => object.object.tag===tag)
-  return fileteredObjects;
-}
-
-/**
- * Adds tag to a object
- * @param {*} object 
- * @param {String} tag 
- */
-const AddTagToMesh = (object, tag) => {
-  object.tag = tag;
-  object.children.forEach((child) => {
-    AddTagToMesh(child, tag);
-  });
-};
-
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
 export function onWindowResize() {
