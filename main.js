@@ -33,7 +33,7 @@ box.translateX(3);
 scene.add(box);
 
 // Group selection group
-let group = new THREE.Group();
+// let group = new THREE.Group();
 
 //camera
 
@@ -95,7 +95,7 @@ window.addEventListener("mousedown", (event) => {
     // }
 
     if (MultiSelectMode) {
-      ClearGroup(group);
+      // ClearGroup(group);
 
       selectionHelper.onPointerDown(event);
 
@@ -139,7 +139,7 @@ window.addEventListener("mouseup", () => {
     selectionHelper.onPointerUp();
     // isSelecting = false;
     const selectedObjects = selectionBox.select(); // Get selected objects
-
+      let group = new THREE.Group()
     selectedObjects.forEach((object) => {
       if (object.parent && object.parent.tag === "helper") return;
       if (object.parent && object.tag === "helper") return;
@@ -156,6 +156,7 @@ window.addEventListener("mouseup", () => {
       transformControl.attach(group);
       // control.enabled = false;
     } else {
+      group.dispose()
       scene.remove(group);
       // transformControl.detach();
       // control.enabled = true;
@@ -270,7 +271,8 @@ const ClearGroup = (group) => {
     group.remove(child);
     scene.add(child);
   }
-  group = new THREE.Group();
+  scene.remove(group)
+  // group = new THREE.Group();
 };
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
