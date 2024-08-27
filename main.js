@@ -10,10 +10,11 @@ import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
 import TransformGizmo from "./src/core/TransformGizmo";
 import GridView from "./src/util/GridView";
+import MainControl from "./src/core/MainControl";
 
 // States
 let isSelecting = false;
-let MultiSelectMode = false;
+let MultiSelectMode = true;
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
@@ -60,7 +61,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 //Control
-const control = new OrbitControls(camera, renderer.domElement);
+// const control = new OrbitControls(camera, renderer.domElement);
+const control = new MainControl(camera, renderer.domElement);
 
 // Initialize TransformControls and add to the scene
 // const transformControl = new TransformControls(camera, renderer.domElement);
@@ -84,35 +86,36 @@ let isDragging = false;
 let mouseDown = false;
 
 window.addEventListener("mousedown", (event) => {
-  mouseDown = true;
-  isDragging = false;
+  if (event.button === 0 && transformControl.axis === null) {
+    mouseDown = true;
+    isDragging = false;
 
-  // if (MultiSelectMode) {
-  //   selectionHelper = new SelectionHelper(renderer, "selectBox");
-  // }
+    // if (MultiSelectMode) {
+    //   selectionHelper = new SelectionHelper(renderer, "selectBox");
+    // }
 
-  if (MultiSelectMode) {
-    ClearGroup(group);
+    if (MultiSelectMode) {
+      ClearGroup(group);
 
-    selectionHelper.onPointerDown(event);
+      selectionHelper.onPointerDown(event);
 
-    isSelecting = true;
-    control.enabled = false;
-    transformControl.detach(); // Detach any currently attached object
-    selectionBox.startPoint.set(
-      (event.clientX / window.innerWidth) * 2 - 1,
-      -(event.clientY / window.innerHeight) * 2 + 1,
-      0.5
-    );
+      isSelecting = true;
+      // control.enabled = false;
+      // transformControl.detach(); // Detach any currently attached object
+      selectionBox.startPoint.set(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1,
+        0.5
+      );
+    }
   }
-
-  // selectionHelper.onPointerDown(event);
 });
 
 // Mouse move event to update selection box
 window.addEventListener("mousemove", (event) => {
   if (mouseDown) {
     isDragging = true; // Set dragging to true if the mouse moves while pressed
+    console.log("ki hocche?")
   }
 
   if (MultiSelectMode) {
@@ -134,8 +137,7 @@ window.addEventListener("mouseup", () => {
 
   if (MultiSelectMode) {
     selectionHelper.onPointerUp();
-    control.enabled = true;
-    isSelecting = false;
+    // isSelecting = false;
     const selectedObjects = selectionBox.select(); // Get selected objects
 
     selectedObjects.forEach((object) => {
@@ -152,11 +154,11 @@ window.addEventListener("mouseup", () => {
     if (group.children.length > 0) {
       scene.add(group);
       transformControl.attach(group);
-      control.enabled = false;
+      // control.enabled = false;
     } else {
       scene.remove(group);
-      transformControl.detach();
-      control.enabled = true;
+      // transformControl.detach();
+      // control.enabled = true;
     }
   }
 });
@@ -164,7 +166,7 @@ window.addEventListener("mouseup", () => {
 // single object select %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 window.addEventListener("click", () => {
-  if (MultiSelectMode || isDragging) {
+  if (  isDragging) {
     return;
   }
 
@@ -189,11 +191,11 @@ window.addEventListener("click", () => {
         selectedObject.object.parent.tag == "box")
     ) {
       transformControl.attach(selectedObject.object);
-      control.enabled = false;
+      // control.enabled = false;
     }
   } else {
     transformControl.detach();
-    control.enabled = true;
+    // control.enabled = true;
   }
 });
 
@@ -222,7 +224,6 @@ window.addEventListener("keypress", (event) => {
 // Grid helper
 
 const gridHelper = new GridView(scene, 50, 10);
-
 
 // Load model
 const boxTag = new TagHelper("box");
