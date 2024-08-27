@@ -230,7 +230,6 @@ const boxTag = new TagHelper("box");
 const loader = new GLTFLoader();
 const LoadModel = (path, gLTFLoader) => {
   gLTFLoader.load(path, (gltf) => {
-    console.log(gltf);
     boxTag.AddTag(gltf.scene);
     scene.add(gltf.scene);
   });
