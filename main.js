@@ -8,8 +8,7 @@ import {
 } from "three/examples/jsm/Addons.js";
 import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
-
-
+import TransformGizmo from "./src/core/TransformGizmo";
 
 // States
 let isSelecting = false;
@@ -18,12 +17,9 @@ let MultiSelectMode = false;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
 
-
 // Ambient Light
-const ambientLight = new THREE.AmbientLight(0xffffff, 1)
-scene.add(ambientLight)
-
-
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
 
 // test box
 const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
@@ -45,9 +41,9 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.near = .01
-camera.far = 2000
-camera.updateProjectionMatrix()
+camera.near = 0.01;
+camera.far = 2000;
+camera.updateProjectionMatrix();
 camera.position.z = 10;
 scene.add(camera);
 
@@ -66,7 +62,8 @@ document.body.appendChild(renderer.domElement);
 const control = new OrbitControls(camera, renderer.domElement);
 
 // Initialize TransformControls and add to the scene
-const transformControl = new TransformControls(camera, renderer.domElement);
+// const transformControl = new TransformControls(camera, renderer.domElement);
+const transformControl = new TransformGizmo(camera, renderer.domElement);
 scene.add(transformControl);
 
 // Initialize SelectionBox and SelectionHelper
@@ -86,22 +83,17 @@ let isDragging = false;
 let mouseDown = false;
 
 window.addEventListener("mousedown", (event) => {
-
   mouseDown = true;
   isDragging = false;
-
 
   // if (MultiSelectMode) {
   //   selectionHelper = new SelectionHelper(renderer, "selectBox");
   // }
 
   if (MultiSelectMode) {
-
     ClearGroup(group);
 
-
-    selectionHelper.onPointerDown(event)
-
+    selectionHelper.onPointerDown(event);
 
     isSelecting = true;
     control.enabled = false;
@@ -111,8 +103,6 @@ window.addEventListener("mousedown", (event) => {
       -(event.clientY / window.innerHeight) * 2 + 1,
       0.5
     );
-
-
   }
 
   // selectionHelper.onPointerDown(event);
@@ -120,16 +110,13 @@ window.addEventListener("mousedown", (event) => {
 
 // Mouse move event to update selection box
 window.addEventListener("mousemove", (event) => {
-
   if (mouseDown) {
     isDragging = true; // Set dragging to true if the mouse moves while pressed
   }
 
-
-
   if (MultiSelectMode) {
     if (isSelecting) {
-      selectionHelper.onPointerMove(event)
+      selectionHelper.onPointerMove(event);
       selectionBox.endPoint.set(
         (event.clientX / window.innerWidth) * 2 - 1,
         -(event.clientY / window.innerHeight) * 2 + 1,
@@ -142,13 +129,11 @@ window.addEventListener("mousemove", (event) => {
 
 // Mouse up event to finalize selection and attach TransformControls
 window.addEventListener("mouseup", () => {
+  mouseDown = false;
 
-  mouseDown = false
-
-
-  if (MultiSelectMode ) {
+  if (MultiSelectMode) {
     selectionHelper.onPointerUp();
-    control.enabled = true
+    control.enabled = true;
     isSelecting = false;
     const selectedObjects = selectionBox.select(); // Get selected objects
 
@@ -167,15 +152,11 @@ window.addEventListener("mouseup", () => {
       scene.add(group);
       transformControl.attach(group);
       control.enabled = false;
-    }else{
+    } else {
       scene.remove(group);
       transformControl.detach();
       control.enabled = true;
     }
-
-    
-
-
   }
 });
 
@@ -192,16 +173,13 @@ window.addEventListener("click", () => {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(scene.children);
 
-
   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
   // const debugdraw = new DebugDraw(100, 0x00ff00, .1)
   // debugdraw.DrawLine(raycaster, scene)
   // debugdraw.DrawImpact(raycaster, scene)
   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
 
-
-
-  const filteredObjects = boxTag.FindObjectsWithTag(intersects)
+  const filteredObjects = boxTag.FindObjectsWithTag(intersects);
   if (filteredObjects.length > 0) {
     const selectedObject = filteredObjects[0];
     if (
@@ -233,24 +211,6 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-window.addEventListener("keypress", (event) => {
-  
-  switch(event.key) {
-    case 'w':
-      transformControl.setMode('translate');
-      break;
-    case 'e':
-      transformControl.setMode('rotate');
-      break;
-    case 'r':
-      transformControl.setMode('scale');
-      break;
-    case 'g':
-      gridHelper.visible = !gridHelper.visible;
-
-  }
-});
-
 // DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD--- Debug key ---DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 window.addEventListener("keypress", (event) => {
   if (event.key === "c") {
@@ -258,28 +218,24 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-
-
 // Grid helper
-const gridSize = 100
-const gridDivision = 100
-const gridHelper = new THREE.GridHelper(gridSize, gridDivision)
-scene.add(gridHelper)
+const gridSize = 100;
+const gridDivision = 100;
+const gridHelper = new THREE.GridHelper(gridSize, gridDivision);
+scene.add(gridHelper);
 
 // Load model
-const boxTag = new TagHelper("box")
+const boxTag = new TagHelper("box");
 
 const loader = new GLTFLoader();
 const LoadModel = (path, gLTFLoader) => {
   gLTFLoader.load(path, (gltf) => {
-    console.log(gltf)
-    boxTag.AddTag(gltf.scene)
+    console.log(gltf);
+    boxTag.AddTag(gltf.scene);
     scene.add(gltf.scene);
-  })
-}
+  });
+};
 LoadModel("https://localhost:7133/api/Model/scene.gltf", loader);
-
-
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
@@ -290,13 +246,10 @@ const animate = () => {
 };
 animate();
 
-
-
-
 /**
  * Adds meshes to group with defined conditions in it.
- * @param {THREE.Group} group 
- * @param {THREE.Mesh} mesh 
+ * @param {THREE.Group} group
+ * @param {THREE.Mesh} mesh
  */
 const AddMeshToGroup = (group, mesh) => {
   group.children.forEach((child) => {
@@ -307,20 +260,18 @@ const AddMeshToGroup = (group, mesh) => {
   group.add(mesh);
 };
 
-
 /**
  * Empties the group and add the children back to the scene
- * @param {THREE.Group} group 
+ * @param {THREE.Group} group
  */
 const ClearGroup = (group) => {
-
-  while(group.children.length > 0) {
+  while (group.children.length > 0) {
     const child = group.children[0];
     group.remove(child);
     scene.add(child);
   }
   group = new THREE.Group();
-}
+};
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
 export function onWindowResize() {
@@ -334,10 +285,10 @@ window.addEventListener("resize", onWindowResize);
 
 /**
  * Loads model in console
- * @param {Strin} name 
+ * @param {Strin} name
  */
 export const LMC = (name) => {
-  LoadModel("https://localhost:7133/api/Model/"+name+".gltf", loader)
+  LoadModel("https://localhost:7133/api/Model/" + name + ".gltf", loader);
 };
 
-window.LMC = LMC
+window.LMC = LMC;
