@@ -17,7 +17,7 @@ let isSelecting = false;
 let MultiSelectMode = true;
 
 // Mesh Highlight
-let highlightMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+let highlightMat = new THREE.MeshBasicMaterial({ color: 0xffa500 });
 let matBackup = new Map();
 let lastSelectedObject = undefined;
 
@@ -92,6 +92,9 @@ let isDragging = false;
 let mouseDown = false;
 
 window.addEventListener("mousedown", (event) => {
+  mouseDown = true;
+  isDragging = false;
+
   if (event.button === 0 && transformControl.axis === null) {
     mouseDown = true;
     isDragging = false;
@@ -186,6 +189,7 @@ window.addEventListener("mouseup", () => {
 
 window.addEventListener("click", (event) => {
   if (isDragging) {
+    console.log("dragging")
     return;
   }
 
@@ -274,9 +278,11 @@ const AddMeshToGroup = (group, mesh) => {
 };
 
 const HighlightMesh = (event) => {
-  if(transformControl.object){
-    return
-  }
+
+  // un comment if don't want to highlight other objects while a object is selected
+  // if(transformControl.object){
+  //   return
+  // }
 
 
 
