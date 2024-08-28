@@ -15,6 +15,12 @@ import MainControl from "./src/core/MainControl";
 // States
 let isSelecting = false;
 let MultiSelectMode = true;
+
+// Mesh Highlight
+let highlightMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+let matBackup = new Map();
+let lastSelectedObject = undefined;
+
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
@@ -113,9 +119,9 @@ window.addEventListener("mousedown", (event) => {
 
 // Mouse move event to update selection box
 window.addEventListener("mousemove", (event) => {
+  HighlightMesh(event);
   if (mouseDown) {
     isDragging = true; // Set dragging to true if the mouse moves while pressed
-    console.log("ki hocche?")
   }
 
   if (MultiSelectMode) {
@@ -139,7 +145,9 @@ window.addEventListener("mouseup", () => {
     selectionHelper.onPointerUp();
     // isSelecting = false;
     const selectedObjects = selectionBox.select(); // Get selected objects
-      let group = new THREE.Group()
+    let group = new THREE.Group();
+    let groupPos = new THREE.Vector3(0, 0, 0);
+
     selectedObjects.forEach((object) => {
       if (object.parent && object.parent.tag === "helper") return;
       if (object.parent && object.tag === "helper") return;
@@ -149,14 +157,24 @@ window.addEventListener("mouseup", () => {
         (object.tag == "box" || object.parent.tag == "box")
       ) {
         AddMeshToGroup(group, object);
+        groupPos.add(object.position);
       }
     });
-    if (group.children.length > 0) {
+
+    let groupLen = group.children.length;
+    if (groupLen > 0) {
+      groupPos = new THREE.Vector3(
+        groupPos.x / groupLen,
+        groupPos.y / groupLen,
+        groupPos.z / groupLen
+      );
+      group.position.copy(groupPos);
+      console.log(groupPos);
+
       scene.add(group);
       transformControl.attach(group);
       // control.enabled = false;
     } else {
-      group.dispose()
       scene.remove(group);
       // transformControl.detach();
       // control.enabled = true;
@@ -167,7 +185,7 @@ window.addEventListener("mouseup", () => {
 // single object select %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 window.addEventListener("click", () => {
-  if (  isDragging) {
+  if (isDragging) {
     return;
   }
 
@@ -215,13 +233,6 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-// DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD--- Debug key ---DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-window.addEventListener("keypress", (event) => {
-  if (event.key === "c") {
-    console.log(scene.children);
-  }
-});
-
 // Grid helper
 
 const gridHelper = new GridView(scene, 50, 10);
@@ -261,18 +272,47 @@ const AddMeshToGroup = (group, mesh) => {
   group.add(mesh);
 };
 
-/**
- * Empties the group and add the children back to the scene
- * @param {THREE.Group} group
- */
-const ClearGroup = (group) => {
-  while (group.children.length > 0) {
-    const child = group.children[0];
-    group.remove(child);
-    scene.add(child);
+const HighlightMesh = (event) => {
+  if(transformControl.object){
+    return
   }
-  scene.remove(group)
-  // group = new THREE.Group();
+
+
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(scene.children);
+
+  const filteredObjects = boxTag.FindObjectsWithTag(intersects);
+  if (filteredObjects.length > 0) {
+    const selectedObject = filteredObjects[0];
+
+    if (
+      selectedObject.object instanceof THREE.Mesh &&
+      (selectedObject.object.tag == "box" ||
+        selectedObject.object.parent.tag == "box")
+    ) {
+      // console.log(selectedObject.object.uuid)
+      if (lastSelectedObject != selectedObject.object && lastSelectedObject != undefined) {
+        lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
+      }
+      lastSelectedObject = selectedObject.object;
+
+      if (matBackup.has(selectedObject.object.uuid)) {
+        selectedObject.object.material = highlightMat;
+      } else {
+        matBackup.set(
+          selectedObject.object.uuid,
+          selectedObject.object.material
+        );
+        selectedObject.object.material = highlightMat;
+      }
+    }
+  } else if (lastSelectedObject != undefined){
+    lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
+  }
 };
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
