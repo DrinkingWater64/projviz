@@ -176,7 +176,7 @@ window.addEventListener("mouseup", () => {
       // control.enabled = false;
     } else {
       scene.remove(group);
-      // transformControl.detach();
+      transformControl.detach();
       // control.enabled = true;
     }
   }
@@ -184,7 +184,7 @@ window.addEventListener("mouseup", () => {
 
 // single object select %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-window.addEventListener("click", () => {
+window.addEventListener("click", (event) => {
   if (isDragging) {
     return;
   }
@@ -211,6 +211,7 @@ window.addEventListener("click", () => {
     ) {
       transformControl.attach(selectedObject.object);
       // control.enabled = false;
+      console.log("adding here")
     }
   } else {
     transformControl.detach();
