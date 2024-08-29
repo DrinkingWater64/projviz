@@ -26,18 +26,29 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xbfe3dd);
 
 // Ambient Light
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-scene.add(ambientLight);
+// const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+// scene.add(ambientLight);
+
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(10, 10, 10);
+light.castShadow = true;
+scene.add(light);
 
 // test box
 const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
-const boxmaterial = new THREE.MeshBasicMaterial();
+const boxmaterial = new THREE.MeshStandardMaterial();
 const box = new THREE.Mesh(boxGeoemetry, boxmaterial);
 box.tag = "box";
 box.translateX(3);
+box.castShadow = true;
+box.receiveShadow = true;
 
+const box2 = new THREE.Mesh(boxGeoemetry, boxmaterial);
+box2.tag = "box";
+box2.castShadow = true;
+box2.receiveShadow = true;
 scene.add(box);
-
+scene.add(box2);
 // Group selection group
 // let group = new THREE.Group();
 
@@ -62,6 +73,8 @@ const canvas = document.querySelector("canvas.webgl");
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -189,7 +202,7 @@ window.addEventListener("mouseup", () => {
 
 window.addEventListener("click", (event) => {
   if (isDragging) {
-    console.log("dragging")
+    console.log("dragging");
     return;
   }
 
@@ -215,7 +228,7 @@ window.addEventListener("click", (event) => {
     ) {
       transformControl.attach(selectedObject.object);
       // control.enabled = false;
-      console.log("adding here")
+      console.log("adding here");
     }
   } else {
     transformControl.detach();
@@ -249,10 +262,16 @@ const loader = new GLTFLoader();
 const LoadModel = (path, gLTFLoader) => {
   gLTFLoader.load(path, (gltf) => {
     boxTag.AddTag(gltf.scene);
+    gltf.scene.castShadow = true;
+    gltf.scene.receiveShadow = true;
+    gltf.scene.traverse((child) => {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    });
     scene.add(gltf.scene);
   });
 };
-LoadModel("https://localhost:7133/api/Model/scene.gltf", loader);
+LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
@@ -278,13 +297,10 @@ const AddMeshToGroup = (group, mesh) => {
 };
 
 const HighlightMesh = (event) => {
-
   // un comment if don't want to highlight other objects while a object is selected
   // if(transformControl.object){
   //   return
   // }
-
-
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -302,7 +318,10 @@ const HighlightMesh = (event) => {
         selectedObject.object.parent.tag == "box")
     ) {
       // console.log(selectedObject.object.uuid)
-      if (lastSelectedObject != selectedObject.object && lastSelectedObject != undefined) {
+      if (
+        lastSelectedObject != selectedObject.object &&
+        lastSelectedObject != undefined
+      ) {
         lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
       }
       lastSelectedObject = selectedObject.object;
@@ -317,7 +336,7 @@ const HighlightMesh = (event) => {
         selectedObject.object.material = highlightMat;
       }
     }
-  } else if (lastSelectedObject != undefined){
+  } else if (lastSelectedObject != undefined) {
     lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
   }
 };
