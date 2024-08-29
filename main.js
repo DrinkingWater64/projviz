@@ -34,6 +34,9 @@ light.position.set(10, 10, 10);
 light.castShadow = true;
 scene.add(light);
 
+const helper = new THREE.DirectionalLightHelper(light, 5);
+scene.add(helper);
+
 // test box
 const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
 const boxmaterial = new THREE.MeshStandardMaterial();
