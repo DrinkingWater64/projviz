@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import {
   GLTFLoader,
-  OrbitControls,
-  TransformControls,
   SelectionBox,
   SelectionHelper,
 } from "three/examples/jsm/Addons.js";
@@ -11,15 +9,11 @@ import TagHelper from "./src/util/TagHelper";
 import TransformGizmo from "./src/core/TransformGizmo";
 import GridView from "./src/util/GridView";
 import MainControl from "./src/core/MainControl";
+import Highlighter from "./src/util/HIghLighter";
 
 // States
 let isSelecting = false;
 let MultiSelectMode = true;
-
-// Mesh Highlight
-let highlightMat = new THREE.MeshBasicMaterial({ color: 0xffa500 });
-let matBackup = new Map();
-let lastSelectedObject = undefined;
 
 // Scene
 const scene = new THREE.Scene();
@@ -82,6 +76,9 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Highlighter
+let hl = new Highlighter(scene, camera);
+
 //Control
 // const control = new OrbitControls(camera, renderer.domElement);
 const control = new MainControl(camera, renderer.domElement);
@@ -138,7 +135,7 @@ window.addEventListener("mousedown", (event) => {
 
 // Mouse move event to update selection box
 window.addEventListener("mousemove", (event) => {
-  HighlightMesh(event);
+  hl.HighlightMesh(event);
   if (mouseDown) {
     isDragging = true; // Set dragging to true if the mouse moves while pressed
   }
@@ -297,51 +294,6 @@ const AddMeshToGroup = (group, mesh) => {
     }
   });
   group.add(mesh);
-};
-
-const HighlightMesh = (event) => {
-  // un comment if don't want to highlight other objects while a object is selected
-  // if(transformControl.object){
-  //   return
-  // }
-
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(scene.children);
-
-  const filteredObjects = boxTag.FindObjectsWithTag(intersects);
-  if (filteredObjects.length > 0) {
-    const selectedObject = filteredObjects[0];
-
-    if (
-      selectedObject.object instanceof THREE.Mesh &&
-      (selectedObject.object.tag == "box" ||
-        selectedObject.object.parent.tag == "box")
-    ) {
-      // console.log(selectedObject.object.uuid)
-      if (
-        lastSelectedObject != selectedObject.object &&
-        lastSelectedObject != undefined
-      ) {
-        lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
-      }
-      lastSelectedObject = selectedObject.object;
-
-      if (matBackup.has(selectedObject.object.uuid)) {
-        selectedObject.object.material = highlightMat;
-      } else {
-        matBackup.set(
-          selectedObject.object.uuid,
-          selectedObject.object.material
-        );
-        selectedObject.object.material = highlightMat;
-      }
-    }
-  } else if (lastSelectedObject != undefined) {
-    lastSelectedObject.material = matBackup.get(lastSelectedObject.uuid);
-  }
 };
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
