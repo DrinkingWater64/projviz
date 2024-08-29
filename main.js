@@ -9,7 +9,7 @@ import TagHelper from "./src/util/TagHelper";
 import TransformGizmo from "./src/core/TransformGizmo";
 import GridView from "./src/util/GridView";
 import MainControl from "./src/core/MainControl";
-import Highlighter from "./src/util/HIghLighter";
+import Highlighter from "./src/util/HighLighter";
 
 // States
 let isSelecting = false;
@@ -46,11 +46,8 @@ box2.castShadow = true;
 box2.receiveShadow = true;
 scene.add(box);
 scene.add(box2);
-// Group selection group
-// let group = new THREE.Group();
 
 //camera
-
 const camera = new THREE.PerspectiveCamera(
   45,
   window.innerWidth / window.innerHeight,
@@ -172,7 +169,7 @@ window.addEventListener("mouseup", () => {
         object instanceof THREE.Mesh &&
         (object.tag == "box" || object.parent.tag == "box")
       ) {
-        AddMeshToGroup(group, object);
+        group.add(object);
         groupPos.add(object.position);
       }
     });
@@ -245,14 +242,7 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-window.addEventListener("keypress", (event) => {
-  if (event.key === "1") {
-    MultiSelectMode = !MultiSelectMode;
-  }
-});
-
 // Grid helper
-
 const gridHelper = new GridView(scene, 50, 10);
 
 // Load model
@@ -281,20 +271,6 @@ const animate = () => {
   renderer.render(scene, camera);
 };
 animate();
-
-/**
- * Adds meshes to group with defined conditions in it.
- * @param {THREE.Group} group
- * @param {THREE.Mesh} mesh
- */
-const AddMeshToGroup = (group, mesh) => {
-  group.children.forEach((child) => {
-    if (child === mesh) {
-      return;
-    }
-  });
-  group.add(mesh);
-};
 
 // Resize event listener---------------------------------------------------------------------------------------------------------------
 export function onWindowResize() {
