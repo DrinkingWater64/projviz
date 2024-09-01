@@ -103,145 +103,15 @@ const mouse = new THREE.Vector2();
 let isDragging = false;
 let mouseDown = false;
 
-// window.addEventListener("mousedown", (event) => {
-//   mouseDown = true;
-//   isDragging = false;
 
-//   if (event.button === 0 && transformControl.axis === null) {
-//     mouseDown = true;
-//     isDragging = false;
-
-//     // if (MultiSelectMode) {
-//     //   selectionHelper = new SelectionHelper(renderer, "selectBox");
-//     // }
-
-//     if (MultiSelectMode) {
-//       // ClearGroup(group);
-
-//       selectionHelper.onPointerDown(event);
-
-//       // isSelecting = true;
-//       // control.enabled = false;
-//       // transformControl.detach(); // Detach any currently attached object
-//       selectionBox.startPoint.set(
-//         (event.clientX / window.innerWidth) * 2 - 1,
-//         -(event.clientY / window.innerHeight) * 2 + 1,
-//         0.5
-//       );
-//     }
-//   }
-// });
-
-// // Mouse move event to update selection box
-// window.addEventListener("mousemove", (event) => {
-//   hl.HighlightMesh(event);
-//   if (mouseDown) {
-//     isDragging = true; // Set dragging to true if the mouse moves while pressed
-//   }
-
-//   if (MultiSelectMode) {
-//     if (true) {
-//       selectionHelper.onPointerMove(event);
-//       selectionBox.endPoint.set(
-//         (event.clientX / window.innerWidth) * 2 - 1,
-//         -(event.clientY / window.innerHeight) * 2 + 1,
-//         0.5
-//       );
-//       selectionBox.select(); // Select objects within the box
-//     }
-//   }
-// });
-
-// // Mouse up event to finalize selection and attach TransformControls
-// window.addEventListener("mouseup", () => {
-//   mouseDown = false;
-
-//   if (MultiSelectMode) {
-//     selectionHelper.onPointerUp();
-//     // isSelecting = false;
-//     const selectedObjects = selectionBox.select(); // Get selected objects
-//     let group = new THREE.Group();
-//     let groupPos = new THREE.Vector3(0, 0, 0);
-
-//     selectedObjects.forEach((object) => {
-//       if (object.parent && object.parent.tag === "helper") return;
-//       if (object.parent && object.tag === "helper") return;
-
-//       if (
-//         object instanceof THREE.Mesh &&
-//         (object.tag == "box" || object.parent.tag == "box")
-//       ) {
-//         group.add(object);
-//         groupPos.add(object.position);
-//       }
-//     });
-
-//     let groupLen = group.children.length;
-//     if (groupLen > 0) {
-//       groupPos = new THREE.Vector3(
-//         groupPos.x / groupLen,
-//         groupPos.y / groupLen,
-//         groupPos.z / groupLen
-//       );
-//       group.position.copy(groupPos);
-//       console.log(groupPos);
-
-//       scene.add(group);
-//       transformControl.attach(group);
-//       // control.enabled = false;
-//     } else {
-//       scene.remove(group);
-//       transformControl.detach();
-//       // control.enabled = true;
-//     }
-//   }
-// });
-
-// // single object select %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-// window.addEventListener("click", (event) => {
-//   if (isDragging) {
-//     return;
-//   }
-
-//   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-//   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-//   raycaster.setFromCamera(mouse, camera);
-//   const intersects = raycaster.intersectObjects(scene.children);
-
-//   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-//   // const debugdraw = new DebugDraw(100, 0x00ff00, .1)
-//   // debugdraw.DrawLine(raycaster, scene)
-//   // debugdraw.DrawImpact(raycaster, scene)
-//   //7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777    draw debug     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
-
-//   const filteredObjects = boxTag.FindObjectsWithTag(intersects);
-//   if (filteredObjects.length > 0) {
-//     const selectedObject = filteredObjects[0];
-//     if (
-//       selectedObject.object instanceof THREE.Mesh &&
-//       (selectedObject.object.tag == "box" ||
-//         selectedObject.object.parent.tag == "box")
-//     ) {
-//       transformControl.attach(selectedObject.object);
-//       // control.enabled = false;
-//       console.log("adding here");
-//     }
-//   } else {
-//     transformControl.detach();
-//     // control.enabled = true;
-//   }
-// });
-
-// // keyboard control...........................................................................................................................................
-// window.addEventListener("keypress", (event) => {
-//   // console.log(event);
-//   if (event.key === "`") {
-//     transformControl.detach();
-//     control.enabled = true;
-//   }
-// });
+// keyboard control...........................................................................................................................................
+window.addEventListener("keypress", (event) => {
+  // console.log(event);
+  if (event.key === "`") {
+    transformControl.detach();
+    control.enabled = true;
+  }
+});
 
 // Grid helper
 const gridHelper = new GridView(50, 10);
