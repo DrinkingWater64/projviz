@@ -1,9 +1,8 @@
-import * as THREE from "three";
 import { TransformControls } from "three/examples/jsm/Addons.js";
-
+import CanvasManagerSingleton from "../Manager/CanvasManager";
 class TransformGizmo extends TransformControls {
-  constructor(camera, domElement) {
-    super(camera, domElement);
+  constructor(camera) {
+    super(camera, CanvasManagerSingleton.getInstance().renderer.domElement);
     window.addEventListener("keypress", this.switchModes.bind(this))
   }
 

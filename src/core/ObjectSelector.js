@@ -8,18 +8,16 @@ class ObjectSelector {
   #mousePos
   #camera
   #raycaster
-  #renderer
   #tagHelper
   #transformControl
-  constructor(camera, render) {
+  constructor(camera) {
     this.#camera = camera
-    this.#renderer = render
     this.#isMouseDragging = false
     this.#isMouseDown = false
     this.#mousePos = new Vector2()
     this.#raycaster = new Raycaster()
     this.#tagHelper = new TagHelper("box")
-    this.#transformControl = new TransformGizmo(this.#camera, this.#renderer)
+    this.#transformControl = new TransformGizmo(this.#camera)
   }
 
   HandleOnClick(event) {
@@ -27,12 +25,12 @@ class ObjectSelector {
       return
     }
 
-    this.mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    this.#mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.#mousePos.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     this.raycaster.setFromCamera(this.mousePos, this.camera);
-    const intersects = this.raycaster.intersectObjects(SceneManagerSingleton.getInstance().scene.children);
-    const filteredObjects = this.tagHelper.FindObjectsWithTag(intersects);
+    const intersects = this.#raycaster.intersectObjects(SceneManagerSingleton.getInstance().scene.children);
+    const filteredObjects = this.#tagHelper.FindObjectsWithTag(intersects);
 
     if (filteredObjects.length > 0) {
       const selectedObject = filteredObjects[0];
@@ -41,7 +39,7 @@ class ObjectSelector {
         (selectedObject.object.tag == this.tagHelper.tag ||
           selectedObject.object.parent.tag == this.tagHelper.tag)
       ) {
-        this.transformControl.attach(selectedObject.object);
+        this.#transformControl.attach(selectedObject.object);
       }
     }
   }

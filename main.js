@@ -11,6 +11,7 @@ import GridView from "./src/util/GridView";
 import MainControl from "./src/core/MainControl";
 import Highlighter from "./src/util/HighLighter";
 import SceneManagerSingleton from "./src/Manager/SceneManager";
+import CanvasManagerSingleton from "./src/Manager/CanvasManager";
 
 // States
 let isSelecting = false;
@@ -18,7 +19,6 @@ let MultiSelectMode = true;
 
 // Scene
 const sceneManager = SceneManagerSingleton.getInstance()
-console.log(sceneManager)
 // const scene = new THREE.Scene();
 const scene = sceneManager.scene
 scene.background = new THREE.Color(0xbfe3dd);
@@ -68,21 +68,16 @@ scene.add(camera);
 const canvas = document.querySelector("canvas.webgl");
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({
-  canvas: canvas,
-});
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const canvasManager = CanvasManagerSingleton.getInstance()
+
+const renderer = canvasManager.renderer
 
 // Highlighter
 let hl = new Highlighter(camera);
 
 //Control
 // const control = new OrbitControls(camera, renderer.domElement);
-const control = new MainControl(camera, renderer.domElement);
+const control = new MainControl(camera);
 
 // Initialize TransformControls and add to the scene
 // const transformControl = new TransformControls(camera, renderer.domElement);
