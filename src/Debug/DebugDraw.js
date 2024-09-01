@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import SceneManagerSingleton from "../Manager/SceneManager";
 
 class DebugDraw {
   #length
@@ -16,25 +17,25 @@ class DebugDraw {
     
   }
 
-  DrawLine(raycaster, scene) {
+  DrawLine(raycaster) {
     const origin = raycaster.ray.origin
     const direction = raycaster.ray.direction.clone().normalize().multiplyScalar(this.#length);
     
     const geometry = new THREE.BufferGeometry().setFromPoints([origin, origin.clone().add(direction)])
     const material = new THREE.LineBasicMaterial({color: this.#color})
     const rayLine = new THREE.Line(geometry, material)
-    scene.add(rayLine)
+    SceneManagerSingleton.getInstance().scene.add(rayLine)
     console.log("draw")
   }
 
-  DrawImpact(raycaster, scene){
+  DrawImpact(raycaster){
     const intersects = raycaster.intersectObjects(scene.children)
     const intersectPoint = intersects[0].point;
     const sphereGeometry = new THREE.SphereGeometry(this.#radius, 16, 16);
     const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const intersectionSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     intersectionSphere.position.copy(intersectPoint);
-    scene.add(intersectionSphere);
+    SceneManagerSingleton.getInstance().scene.add(intersectionSphere);
   }
 }
 

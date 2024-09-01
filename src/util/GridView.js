@@ -1,4 +1,5 @@
 import { GridHelper } from "three";
+import SceneManagerSingleton from "../Manager/SceneManager";
 
 class GridView {
   #gridHelper
@@ -6,24 +7,22 @@ class GridView {
   #divisions
   #color1
   #color2
-  #scene
-  constructor(scene, size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888) {
-    this.#scene = scene
+  constructor(size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888) {
     this.#size = size
     this.#divisions = divisions
     this.#color1 = color1
     this.#color2 = color2
     this.#gridHelper = new GridHelper(this.#size, this.#divisions, this.#color1, this.#color2)
-    this.#scene.add(this.#gridHelper)
+    SceneManagerSingleton.getInstance().scene.add(this.#gridHelper)
     window.addEventListener("keypress", this.ToggleGrid.bind(this))
 
   }
 
   #update() {
     this.#gridHelper.dispose()
-    this.#scene.remove(this.#gridHelper)
+    SceneManagerSingleton.getInstance().scene.remove(this.#gridHelper)
     this.#gridHelper = new GridHelper(this.#size, this.#divisions, this.#color1, this.#color2)
-    this.#scene.add(this.#gridHelper)
+    SceneManagerSingleton.getInstance().scene.add(this.#gridHelper)
     console.log("Update grid" + this.#size)
   }
 

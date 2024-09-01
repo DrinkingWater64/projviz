@@ -4,6 +4,9 @@ class TagHelper {
     this.#tag = tag
   }
 
+  get tag(){
+    return this.#tag
+  }
 
   /**
  * Takes a list of object and finds the object with specified tags

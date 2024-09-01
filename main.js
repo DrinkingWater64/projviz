@@ -10,13 +10,17 @@ import TransformGizmo from "./src/core/TransformGizmo";
 import GridView from "./src/util/GridView";
 import MainControl from "./src/core/MainControl";
 import Highlighter from "./src/util/HighLighter";
+import SceneManagerSingleton from "./src/Manager/SceneManager";
 
 // States
 let isSelecting = false;
 let MultiSelectMode = true;
 
 // Scene
-const scene = new THREE.Scene();
+const sceneManager = SceneManagerSingleton.getInstance()
+console.log(sceneManager)
+// const scene = new THREE.Scene();
+const scene = sceneManager.scene
 scene.background = new THREE.Color(0xbfe3dd);
 
 // Ambient Light
@@ -74,7 +78,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Highlighter
-let hl = new Highlighter(scene, camera);
+let hl = new Highlighter(camera);
 
 //Control
 // const control = new OrbitControls(camera, renderer.domElement);
@@ -199,7 +203,6 @@ window.addEventListener("mouseup", () => {
 
 window.addEventListener("click", (event) => {
   if (isDragging) {
-    console.log("dragging");
     return;
   }
 
@@ -243,7 +246,7 @@ window.addEventListener("keypress", (event) => {
 });
 
 // Grid helper
-const gridHelper = new GridView(scene, 50, 10);
+const gridHelper = new GridView(50, 10);
 
 // Load model
 const boxTag = new TagHelper("box");

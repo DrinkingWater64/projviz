@@ -1,5 +1,6 @@
 import { Raycaster, Vector2, Mesh, MeshBasicMaterial } from "three"
 import TagHelper from "./TagHelper"
+import SceneManagerSingleton from "../Manager/SceneManager"
 
 class Highlighter {
   lastSelectedObject
@@ -10,12 +11,11 @@ class Highlighter {
   tagHelper
   highlightMat
 
-  constructor(scene, camera) {
+  constructor(camera) {
     this.materialMap = new Map()
     this.lastSelectedObject = undefined
     this.mousePos = new Vector2()
     this.raycaster = new Raycaster()
-    this.scene = scene
     this.camera = camera
     this.tagHelper = new TagHelper("box")
     this.highlightMat = new MeshBasicMaterial({ color: 0xffa500 })
@@ -27,7 +27,7 @@ class Highlighter {
 
     this.raycaster.setFromCamera(this.mousePos, this.camera)
 
-    const intersects = this.raycaster.intersectObjects(this.scene.children)
+    const intersects = this.raycaster.intersectObjects(SceneManagerSingleton.getInstance().scene.children)
     const filteredObjects = this.tagHelper.FindObjectsWithTag(intersects)
 
     if (filteredObjects.length > 0) {
