@@ -71,7 +71,7 @@ class ObjectSelector {
   }
 
   HandleMouseMove(event) {
-    this.#highlighter.HighlightMesh(event);
+    // this.#highlighter.HighlightMesh(event);
     if (this.#isMouseDown) {
       this.#isMouseDragging = true;
     }

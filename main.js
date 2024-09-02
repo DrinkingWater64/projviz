@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import {
   GLTFLoader,
-  SelectionBox,
-  SelectionHelper,
 } from "three/examples/jsm/Addons.js";
 import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
@@ -73,45 +71,12 @@ const canvasManager = CanvasManagerSingleton.getInstance()
 
 const renderer = canvasManager.renderer
 
-// Highlighter
-let hl = new Highlighter(camera);
-
 //Control
-// const control = new OrbitControls(camera, renderer.domElement);
 const control = new MainControl(camera);
 const objectSelector = new ObjectSelector(camera);
 
 
-// Initialize TransformControls and add to the scene
-// const transformControl = new TransformControls(camera, renderer.domElement);
-const transformControl = new TransformGizmo(camera, renderer.domElement);
-scene.add(transformControl);
 
-// Initialize SelectionBox and SelectionHelper
-const selectionBox = new SelectionBox(camera, scene);
-// let selectionHelper = new SelectionHelper(renderer, "selectBox");
-// selectionHelper.dispose();
-// new SelectionHelper(renderer, "selectBox");
-
-// Mouse down event to start selection
-
-//Mouse control
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-// Mouse states
-let isDragging = false;
-let mouseDown = false;
-
-
-// keyboard control...........................................................................................................................................
-window.addEventListener("keypress", (event) => {
-  // console.log(event);
-  if (event.key === "`") {
-    transformControl.detach();
-    control.enabled = true;
-  }
-});
 
 // Grid helper
 const gridHelper = new GridView(50, 10);
@@ -132,7 +97,7 @@ const LoadModel = (path, gLTFLoader) => {
     scene.add(gltf.scene);
   });
 };
-LoadModel("https://localhost:7133/api/Model/TestRoom.glb", loader);
+LoadModel("https://localhost:7133/api/Model/pbedroom.glb", loader);
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
