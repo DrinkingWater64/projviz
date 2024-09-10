@@ -1,10 +1,8 @@
 import { WebGLRenderer, PCFSoftShadowMap } from "three";
 
 class CanvasManager {
-  canvas;
   renderer;
   constructor() {
-    this.canvas = document.querySelector("canvas.webgl");
     this.renderer = new WebGLRenderer({antialias: true});
     this.renderer.shadowMap.enabled = true;
     // this.renderer.shadowMap.type = PCFSoftShadowMap;
@@ -13,9 +11,6 @@ class CanvasManager {
     document.body.appendChild(this.renderer.domElement);
   }
 
-  get canvas(){
-    return this.canvas
-  }
 
   get renderer(){
     return this.renderer

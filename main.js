@@ -10,6 +10,16 @@ import SceneManagerSingleton from "./src/Manager/SceneManager";
 import CanvasManagerSingleton from "./src/Manager/CanvasManager";
 import ObjectSelector from "./src/core/ObjectSelector";
 
+import { Menubar } from "./src/UI/menubar";
+import { Viewport } from "./src/core/Viewport";
+
+const menubar = Menubar();
+document.body.appendChild(menubar.dom);
+
+const viewport = new Viewport();
+document.body.appendChild(viewport.dom);
+
+
 // States
 let isSelecting = false;
 let MultiSelectMode = true;
@@ -19,8 +29,7 @@ const sceneManager = SceneManagerSingleton.getInstance();
 // const scene = new THREE.Scene();
 const scene = sceneManager.scene;
 scene.background = new THREE.Color(0xbfe3dd);
-// Canvas
-const canvas = document.querySelector("canvas.webgl");
+
 
 // Renderer
 const canvasManager = CanvasManagerSingleton.getInstance();
