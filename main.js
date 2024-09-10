@@ -1,7 +1,5 @@
 import * as THREE from "three";
-import {
-  GLTFLoader,
-} from "three/examples/jsm/Addons.js";
+import { GLTFLoader } from "three/examples/jsm/Addons.js";
 import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
 import TransformGizmo from "./src/core/TransformGizmo";
@@ -17,38 +15,39 @@ let isSelecting = false;
 let MultiSelectMode = true;
 
 // Scene
-const sceneManager = SceneManagerSingleton.getInstance()
+const sceneManager = SceneManagerSingleton.getInstance();
 // const scene = new THREE.Scene();
-const scene = sceneManager.scene
+const scene = sceneManager.scene;
 scene.background = new THREE.Color(0xbfe3dd);
+// Canvas
+const canvas = document.querySelector("canvas.webgl");
 
+// Renderer
+const canvasManager = CanvasManagerSingleton.getInstance();
+
+const renderer = canvasManager.renderer;
 // Ambient Light
 // const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 // scene.add(ambientLight);
 
 const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(10, 10, 10);
-light.castShadow = true;
+// light.castShadow = true;
 scene.add(light);
+// light.shadow.normalBias = 0.05;
+// light.shadow.bias = -0.00001;
+// light.shadow.mapSize.width = 2048;
+// light.shadow.mapSize.height = 2048;
+// light.shadow.camera.left = -70;
+// light.shadow.camera.right = 70;
+// light.shadow.camera.top = 70;
+// light.shadow.camera.bottom = -70;
+// light.shadow.camera.near = 0.5;
+// light.shadow.camera.far = 500;
 
 const helper = new THREE.DirectionalLightHelper(light, 5);
 scene.add(helper);
 
-// test box
-const boxGeoemetry = new THREE.BoxGeometry(1, 1, 1);
-const boxmaterial = new THREE.MeshStandardMaterial();
-const box = new THREE.Mesh(boxGeoemetry, boxmaterial);
-box.tag = "box";
-box.translateX(3);
-box.castShadow = true;
-box.receiveShadow = true;
-
-const box2 = new THREE.Mesh(boxGeoemetry, boxmaterial);
-box2.tag = "box";
-box2.castShadow = true;
-box2.receiveShadow = true;
-scene.add(box);
-scene.add(box2);
 
 //camera
 const camera = new THREE.PerspectiveCamera(
@@ -63,20 +62,9 @@ camera.updateProjectionMatrix();
 camera.position.z = 10;
 scene.add(camera);
 
-// Canvas
-const canvas = document.querySelector("canvas.webgl");
-
-// Renderer
-const canvasManager = CanvasManagerSingleton.getInstance()
-
-const renderer = canvasManager.renderer
-
 //Control
 const control = new MainControl(camera);
 const objectSelector = new ObjectSelector(camera);
-
-
-
 
 // Grid helper
 const gridHelper = new GridView(50, 10);
@@ -97,7 +85,7 @@ const LoadModel = (path, gLTFLoader) => {
     scene.add(gltf.scene);
   });
 };
-LoadModel("https://localhost:7133/api/Model/pbedroom.glb", loader);
+LoadModel("https://localhost:7133/api/Model/roomBaked.glb", loader);
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
@@ -123,7 +111,7 @@ window.addEventListener("resize", onWindowResize);
  * @param {Strin} name
  */
 export const LMC = (name) => {
-  LoadModel("https://localhost:7133/api/Model/" + name + ".gltf", loader);
+  LoadModel("https://localhost:7133/api/Model/" + name + ".glb", loader);
 };
 
 window.LMC = LMC;

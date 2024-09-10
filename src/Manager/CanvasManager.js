@@ -5,11 +5,9 @@ class CanvasManager {
   renderer;
   constructor() {
     this.canvas = document.querySelector("canvas.webgl");
-    this.renderer = new WebGLRenderer({
-      canvas: this.canvas,
-    });
+    this.renderer = new WebGLRenderer({antialias: true});
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = PCFSoftShadowMap;
+    // this.renderer.shadowMap.type = PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
