@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { LoaderUtils } from "../util/LoaderUtils";
 import { TGALoader } from "three/examples/jsm/Addons.js";
+import SceneManagerSingleton from "../Manager/SceneManager";
 
 class Loader {
   texturePath;
@@ -12,11 +13,11 @@ class Loader {
 
   loadItemList(items) {
     this.loaderUtils.getFilesFromItemList(items, (files, filesMap) => {
-        this.#loadFiles(files, filesMap);
-    })
+      this.loadFiles(files, filesMap);
+    });
   }
 
-  #loadFiles(files, filesMap) {
+  loadFiles(files, filesMap) {
     if (files.length > 0) {
       filesMap = filesMap || this.loaderUtils.createFiiesMap(files);
       const manager = new THREE.LoadingManager();
@@ -63,10 +64,10 @@ class Loader {
             loader.parse(contents, "", (result) => {
               const scene = result.scene;
               scene.name = filename;
-
               scene.animations.push(...result.animations);
               loader.dracoLoader.dispose();
               loader.ktx2Loader.dispose();
+              SceneManagerSingleton.getInstance().scene.add(scene);
             });
           },
           false
@@ -87,6 +88,7 @@ class Loader {
               scene.animations.push(...result.animations);
               loader.dracoLoader.dispose();
               loader.ktx2Loader.dispose();
+              SceneManagerSingleton.getInstance().scene.add(scene);
             });
           },
           false
@@ -123,3 +125,5 @@ class Loader {
     return loader;
   }
 }
+
+export { Loader };
