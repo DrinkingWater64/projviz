@@ -103,6 +103,41 @@ class Loader {
     }
   }
 
+  async loadFromServer(url) {
+    url = 'https://localhost:7133' + url;
+    const manager = new THREE.LoadingManager();
+    const fileExtension = url.split(".").pop().toLowerCase();
+
+    switch (fileExtension) {
+      case "gltf":
+      case "glb": {
+        const loader = await this.#createGLTFLoader(manager);
+        loader.load(
+          url,
+          (result) => {
+            const scene = result.scene;
+            scene.name = url.split("/").pop();
+            scene.animations.push(...result.animations);
+            SceneManagerSingleton.getInstance().scene.add(scene);
+            loader.dracoLoader.dispose();
+            loader.ktx2Loader.dispose();
+          },
+          (xhr) => {
+            const progress = (xhr.loaded / xhr.total) * 100;
+            console.log(`${url} ${Math.round(progress)}% loaded`);
+          },
+          (error) => {
+            console.error("An error occurred while loading the model:", error);
+          }
+        );
+        break;
+      }
+      default:
+        console.error("Unsupported file format:", fileExtension);
+        break;
+    }
+  }
+
   async #createGLTFLoader(manager) {
     const { GLTFLoader } = await import("three/addons/loaders/GLTFLoader.js");
     const { DRACOLoader } = await import("three/addons/loaders/DRACOLoader.js");
