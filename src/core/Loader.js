@@ -2,13 +2,17 @@ import * as THREE from "three";
 import { LoaderUtils } from "../util/LoaderUtils";
 import { TGALoader } from "three/examples/jsm/Addons.js";
 import SceneManagerSingleton from "../Manager/SceneManager";
+import TagHelper from "../util/TagHelper";
 
 class Loader {
   texturePath;
   loaderUtils;
+  tagHelper;
   constructor() {
     this.texturePath = "";
     this.loaderUtils = new LoaderUtils();
+    this.tagHelper = new TagHelper('box')
+
   }
 
   loadItemList(items) {
@@ -116,15 +120,18 @@ class Loader {
           url,
           (result) => {
             const scene = result.scene;
+            scene.traverseVisible((o) => {this.tagHelper.AddTag(o)})
             scene.name = url.split("/").pop();
             scene.animations.push(...result.animations);
             SceneManagerSingleton.getInstance().scene.add(scene);
             loader.dracoLoader.dispose();
             loader.ktx2Loader.dispose();
+            console.log(scene)
+
           },
           (xhr) => {
             const progress = (xhr.loaded / xhr.total) * 100;
-            console.log(`${url} ${Math.round(progress)}% loaded`);
+            // console.log(`${url} ${Math.round(progress)}% loaded`);
           },
           (error) => {
             console.error("An error occurred while loading the model:", error);

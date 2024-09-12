@@ -1,11 +1,8 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/Addons.js";
-import DebugDraw from "./src/Debug/DebugDraw";
 import TagHelper from "./src/util/TagHelper";
-import TransformGizmo from "./src/core/TransformGizmo";
 import GridView from "./src/util/GridView";
 import MainControl from "./src/core/MainControl";
-import Highlighter from "./src/util/HighLighter";
 import SceneManagerSingleton from "./src/Manager/SceneManager";
 import CanvasManagerSingleton from "./src/Manager/CanvasManager";
 import ObjectSelector from "./src/core/ObjectSelector";
@@ -19,10 +16,6 @@ document.body.appendChild(menubar.dom);
 const viewport = new Viewport();
 document.body.appendChild(viewport.dom);
 
-
-// States
-let isSelecting = false;
-let MultiSelectMode = true;
 
 // Scene
 const sceneManager = SceneManagerSingleton.getInstance();
@@ -94,7 +87,7 @@ const LoadModel = (path, gLTFLoader) => {
     scene.add(gltf.scene);
   });
 };
-LoadModel("https://localhost:7133/api/Model/roomBaked.glb", loader);
+// LoadModel("https://localhost:7133/api/Model/roomBaked.glb", loader);
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 
