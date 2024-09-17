@@ -19,8 +19,14 @@ function MenubarLibrary(){
     option.setTextContent("ADD");
     options.onClick( () => {
         // window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' );
-        let scrollBox = new UIDiv()
+
+        let library = new UIDiv();
+        library.addClass('libray');
+        let scrollBox = new UIDiv();
         scrollBox.setClass('scrollable-box');
+        let closebtn =  new UIButton('x').setClass('close-btn');
+        library.add(closebtn, scrollBox);
+
         const libraryUrl = "https://localhost:7133/api/Model/list";
         fetch(libraryUrl).then(response => {
             if(!response.ok){
@@ -42,7 +48,7 @@ function MenubarLibrary(){
 
 
 
-        document.body.appendChild(scrollBox.dom)
+        document.body.appendChild(library.dom)
         // options.add(scrollBox)
     });
     options.add( option );
