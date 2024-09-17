@@ -8,10 +8,14 @@ import CanvasManagerSingleton from "./src/Manager/CanvasManager";
 import ObjectSelector from "./src/core/ObjectSelector";
 
 import { Menubar } from "./src/UI/menubar";
+import { ObjectPanel } from "./src/UI/ObjectInfoPanel";
 import { Viewport } from "./src/core/Viewport";
 
-const menubar = Menubar();
+const menubar = new Menubar();
 document.body.appendChild(menubar.dom);
+
+const objectPanel = new ObjectPanel();
+document.body.appendChild(objectPanel.dom);
 
 const viewport = new Viewport();
 document.body.appendChild(viewport.dom);

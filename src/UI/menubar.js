@@ -8,6 +8,7 @@ function Menubar(){
     container.setId('menubar');
     container.add(new MenubarFile());
     container.add(new MenubarLibrary());
+    
     return container;
 }
 
