@@ -786,6 +786,42 @@ select {
 
 }
 
+.scrollable-box {
+	position: absolute;
+    top: 70px;
+    left: 50%;
+	transform: translateX(-50%);
+	width: 40%;
+	max-height: 100px;
+	overflow-y: auto;
+	border: 1px solid #ccc;
+	padding: 10px; 
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+}
+
+.scrollable-box button{
+	/* display: block; */
+	margin: 5px;
+	width: 30%;
+	margin-bottom: 10px;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #f0f0f0;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.scrollable-box button:hover {
+    background-color: #98bee8; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+}
+
+.scrollable-box button:active {
+    background-color: #0056b3; /* Background color on click */
+    color: #fff; /* Text color on click */
+}
+
+
 /* Temporary Chrome fix (#24794) */
 
 [draggable="true"] {
