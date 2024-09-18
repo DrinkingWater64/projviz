@@ -16,6 +16,8 @@ class ObjectSelector {
   #selectionBox;
   #selectionHelper;
   #highlighter;
+  selectedObject;
+  #observers
   constructor(camera) {
     this.#camera = camera;
     this.#isMouseDragging = false;
@@ -35,6 +37,9 @@ class ObjectSelector {
     );
     this / this.#selectionHelper.dispose();
     this.#highlighter = new Highlighter(this.#camera);
+
+
+    this.#observers = [];
 
     window.addEventListener("mousedown", (event) => {
       this.HandleOnMouseDown(event);
@@ -148,12 +153,33 @@ class ObjectSelector {
         (selectedObject.object.tag == this.#tagHelper.tag ||
           selectedObject.object.parent.tag == this.#tagHelper.tag)
       ) {
+        this.selectedObject = selectedObject;
         this.#transformControl.attach(selectedObject.object);
+        console.log(this.selectedObject)
+        this.notify();
       }
     } else {
       this.#transformControl.detach();
     }
   }
+
+  notify(){
+    this.#observers.forEach((observer)=>{
+      observer.Update(this.selectedObject);
+    });
+  }
+
+  subscribe(o){
+    this.#observers.push(o);
+  }
+
+  unsubscribe(o){
+    [...this.#observers].forEach((observer, index) => {
+      if(observer === o) {
+        this.#observers.splice(index, 1);
+      }
+    });
+  } 
 }
 
 export default ObjectSelector;

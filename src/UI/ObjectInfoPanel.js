@@ -1,4 +1,3 @@
-import { contain } from "three/src/extras/TextureUtils.js";
 import {
   UITabbedPanel,
   UISpan,
@@ -12,90 +11,150 @@ import {
   UITextArea,
   UIText,
   UINumber,
-  UISelect
+  UISelect,
 } from "./ui";
+import { Vector3 } from "three";
 
-function ObjectPanel(){
-  const container = new UITabbedPanel();
-	container.setId( 'sidebar' );
+class ObjectDataPanel {
+  selectedObject;
+  objectPanel;
+  objectNameText;
+  objectTypeText;
+  objectPositionX;
+  objectPositionY;
+  objectPositionZ;
+  objectRotationX;
+  objectRotationY;
+  objectRotationZ;
+  objectScaleX;
+  objectScaleY;
+  objectScaleZ;
+  constructor() {
+    this.objectPanel = this.ObjectPanel();
+  }
 
-  container.addTab('object', 'Object', new ObjectProperties());
+  ObjectPanel() {
+    const container = new UITabbedPanel();
+    container.setId("sidebar");
+    const objectProperties = this.ObjectProperties();
+    container.addTab("object", "Object", objectProperties);
+    return container;
+  }
 
+  ObjectProperties() {
+    const container = new UISpan();
+    const objectData = this.ObjectData();
+    container.add(objectData);
+    return container;
+  }
 
-  return container;
+  ObjectData() {
+    const container = new UIPanel();
+    container.setBorderTop("0");
+    container.setPaddingTop("20px");
+    // settings.setDisplay( 'none' );
+
+    // Type
+    const objectTypeRow = new UIRow();
+    this.objectTypeText = new UIText();
+    objectTypeRow.add(new UIText("Type").setClass("Label"));
+    objectTypeRow.add(this.objectTypeText);
+    this.objectTypeText.setValue("Typeeee");
+
+    container.add(objectTypeRow);
+
+    // name
+    const objectNameRow = new UIRow();
+    this.objectNameText = new UIText();
+    objectNameRow.add(new UIText("Name").setClass("Label"));
+    objectNameRow.add(this.objectNameText);
+    this.objectNameText.setValue("nameeeee");
+
+    container.add(objectNameRow);
+
+    // position
+    const objectPositionRow = new UIRow();
+    this.objectPositionX = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
+    this.objectPositionY = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
+    this.objectPositionZ = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
+
+    objectPositionRow.add(new UIText("Position").setClass("Label"));
+    objectPositionRow.add(
+      this.objectPositionX,
+      this.objectPositionY,
+      this.objectPositionZ
+    );
+
+    container.add(objectPositionRow);
+
+    // rotation
+    const objectRotationRow = new UIRow();
+    this.objectRotationX = new UINumber()
+      .setStep(10)
+      .setNudge(0.1)
+      .setUnit("°")
+      .setWidth("50px");
+    this.objectRotationY = new UINumber()
+      .setStep(10)
+      .setNudge(0.1)
+      .setUnit("°")
+      .setWidth("50px");
+    this.objectRotationZ = new UINumber()
+      .setStep(10)
+      .setNudge(0.1)
+      .setUnit("°")
+      .setWidth("50px");
+
+    objectRotationRow.add(new UIText("Rotation").setClass("Label"));
+    objectRotationRow.add(
+      this.objectRotationX,
+      this.objectRotationY,
+      this.objectRotationZ
+    );
+
+    container.add(objectRotationRow);
+
+    // scale
+    const objectScaleRow = new UIRow();
+    this.objectScaleX = new UINumber(1).setPrecision(3).setWidth("50px");
+    this.objectScaleY = new UINumber(1).setPrecision(3).setWidth("50px");
+    this.objectScaleZ = new UINumber(1).setPrecision(3).setWidth("50px");
+
+    objectScaleRow.add(new UIText("Scale").setClass("Label"));
+    objectScaleRow.add(this.objectScaleX, this.objectScaleY, this.objectScaleZ);
+
+    container.add(objectScaleRow);
+
+    return container;
+  }
+
+  Update(o) {
+    this.selectedObject = o.object;
+    this.objectNameText.setValue(o.object.name);
+    this.objectTypeText.setValue(o.object.type);
+
+    this.objectPositionX.setValue(o.object.position.x);
+    this.objectPositionY.setValue(o.object.position.y);
+    this.objectPositionZ.setValue(o.object.position.z);
+
+    this.objectRotationX.setValue(o.object.rotation.x);
+    this.objectRotationY.setValue(o.object.rotation.y);
+    this.objectRotationZ.setValue(o.object.rotation.z);
+
+    this.objectScaleX.setValue(o.object.scale.x);
+    this.objectScaleY.setValue(o.object.scale.y);
+    this.objectScaleZ.setValue(o.object.scale.z);
+  }
+
+  UpdatePosition() {
+    let position = new Vector3(
+      this.objectPositionX.getValue(),
+      this.objectPositionY.getValue(),
+      this.objectPositionZ.getValue()
+    );
+    this.selectedObject.position.copy(position);
+    // console.log(this);
+  }
 }
 
-function ObjectProperties(){
-  const container = new UISpan();
-
-  container.add(new ObjectData())
-	return container;
-}
-
-function ObjectData(){
-  const container = new UIPanel();
-	container.setBorderTop( '0' );
-	container.setPaddingTop( '20px' );
-  // settings.setDisplay( 'none' );
-
-
-  // Type
-  const objectTypeRow = new UIRow();
-  const objectTypeText = new UIText();
-  objectTypeRow.add(new UIText('Type').setClass('Label'));
-  objectTypeRow.add(objectTypeText);
-  objectTypeText.setValue('Typeeee');
-
-  container.add(objectTypeRow)
-
-
-  // name
-  const objectNameRow = new UIRow();
-  const objectNameText = new UIText();
-  objectNameRow.add(new UIText('Name').setClass('Label'));
-  objectNameRow.add(objectNameText);
-  objectNameText.setValue('nameeeee')
-
-  container.add(objectNameRow)
-
-
-  // position
-  const objectPositionRow = new UIRow();
-  const objectPositionX = new UINumber().setPrecision(3).setWidth('50px');
-  const objectPositionY = new UINumber().setPrecision(3).setWidth('50px');
-  const objectPositionZ = new UINumber().setPrecision(3).setWidth('50px');
-
-  objectPositionRow.add(new UIText('Position').setClass('Label'));
-  objectPositionRow.add(objectPositionX, objectPositionY, objectPositionZ);
-
-  container.add(objectPositionRow);
-
-  // rotation
-  const objectRotationRow = new UIRow();
-  const objectRotationX = new UINumber().setStep(10).setNudge(0.1).setUnit('°').setWidth( '50px' );
-  const objectRotationY = new UINumber().setStep(10).setNudge(0.1).setUnit('°').setWidth( '50px' );
-  const objectRotationZ = new UINumber().setStep(10).setNudge(0.1).setUnit('°').setWidth( '50px' );
-
-  objectRotationRow.add(new UIText('Rotation').setClass('Label'));
-  objectRotationRow.add(objectRotationX, objectRotationY, objectRotationZ);
-
-  container.add(objectRotationRow);
-
-  // scale
-  const objectScaleRow = new UIRow();
-	const objectScaleX = new UINumber( 1 ).setPrecision( 3 ).setWidth( '50px' );
-	const objectScaleY = new UINumber( 1 ).setPrecision( 3 ).setWidth( '50px' );
-	const objectScaleZ = new UINumber( 1 ).setPrecision( 3 ).setWidth( '50px' );
-
-	objectScaleRow.add( new UIText( 'Scale' ).setClass( 'Label' ) );
-	objectScaleRow.add( objectScaleX, objectScaleY, objectScaleZ );
-
-	container.add( objectScaleRow );
-
-
-
-  return container;
-  
-}
-
-export { ObjectPanel };
+export { ObjectDataPanel };
