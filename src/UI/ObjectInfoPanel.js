@@ -128,9 +128,9 @@ class ObjectDataPanel {
 
     // scale
     const objectScaleRow = new UIRow();
-    this.objectScaleX = new UINumber(1).setPrecision(3).setWidth("50px");
-    this.objectScaleY = new UINumber(1).setPrecision(3).setWidth("50px");
-    this.objectScaleZ = new UINumber(1).setPrecision(3).setWidth("50px");
+    this.objectScaleX = new UINumber(1).setPrecision(3).setWidth("50px").onChange(()=> this.UpdateScale());
+    this.objectScaleY = new UINumber(1).setPrecision(3).setWidth("50px").onChange(()=> this.UpdateScale());
+    this.objectScaleZ = new UINumber(1).setPrecision(3).setWidth("50px").onChange(()=> this.UpdateScale());
 
     objectScaleRow.add(new UIText("Scale").setClass("Label"));
     objectScaleRow.add(this.objectScaleX, this.objectScaleY, this.objectScaleZ);
@@ -164,7 +164,13 @@ class ObjectDataPanel {
       this.objectPositionY.getValue(),
       this.objectPositionZ.getValue()
     );
-    this.selectedObject.position.copy(position);
+
+    if(this.selectedObject.position.distanceTo(position) >= 0.01){
+      this.selectedObject.position.copy(position);
+      this.selectedObject.updateMatrixWorld(true);
+    }
+
+
     // console.log(this);
   }
 
@@ -184,7 +190,14 @@ class ObjectDataPanel {
     }
   }
 
-  UpdateScale() {}
+  UpdateScale() {
+    // set all this to X to scale unifromly
+    let scale = new Vector3(this.objectScaleX.getValue(),this.objectScaleY.getValue(),this.objectScaleZ.getValue());
+    if(this.selectedObject.scale.distanceTo(scale) >= 0.01 ) {
+      this.selectedObject.scale.copy(scale);
+      this.selectedObject.updateMatrixWorld(true);
+    }
+  }
 }
 
 export { ObjectDataPanel };
