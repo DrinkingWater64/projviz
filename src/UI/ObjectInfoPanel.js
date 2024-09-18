@@ -13,7 +13,7 @@ import {
   UINumber,
   UISelect,
 } from "./ui";
-import { Vector3 } from "three";
+import { Euler, MathUtils, Vector3 } from "three";
 
 class ObjectDataPanel {
   selectedObject;
@@ -74,9 +74,18 @@ class ObjectDataPanel {
 
     // position
     const objectPositionRow = new UIRow();
-    this.objectPositionX = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
-    this.objectPositionY = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
-    this.objectPositionZ = new UINumber().setPrecision(3).setWidth("50px").onChange(() => this.UpdatePosition());
+    this.objectPositionX = new UINumber()
+      .setPrecision(3)
+      .setWidth("50px")
+      .onChange(() => this.UpdatePosition());
+    this.objectPositionY = new UINumber()
+      .setPrecision(3)
+      .setWidth("50px")
+      .onChange(() => this.UpdatePosition());
+    this.objectPositionZ = new UINumber()
+      .setPrecision(3)
+      .setWidth("50px")
+      .onChange(() => this.UpdatePosition());
 
     objectPositionRow.add(new UIText("Position").setClass("Label"));
     objectPositionRow.add(
@@ -93,17 +102,20 @@ class ObjectDataPanel {
       .setStep(10)
       .setNudge(0.1)
       .setUnit("°")
-      .setWidth("50px");
+      .setWidth("50px")
+      .onChange(() => this.UpdateRotation());
     this.objectRotationY = new UINumber()
       .setStep(10)
       .setNudge(0.1)
       .setUnit("°")
-      .setWidth("50px");
+      .setWidth("50px")
+      .onChange(() => this.UpdateRotation());
     this.objectRotationZ = new UINumber()
       .setStep(10)
       .setNudge(0.1)
       .setUnit("°")
-      .setWidth("50px");
+      .setWidth("50px")
+      .onChange(() => this.UpdateRotation());
 
     objectRotationRow.add(new UIText("Rotation").setClass("Label"));
     objectRotationRow.add(
@@ -155,6 +167,24 @@ class ObjectDataPanel {
     this.selectedObject.position.copy(position);
     // console.log(this);
   }
+
+  UpdateRotation() {
+    let newRotation = new Euler(
+      this.objectRotationX.getValue() * MathUtils.DEG2RAD,
+      this.objectRotationY.getValue() * MathUtils.DEG2RAD,
+      this.objectRotationZ.getValue() * MathUtils.DEG2RAD
+    );
+    if (
+      new Vector3()
+        .setFromEuler(this.selectedObject.rotation)
+        .distanceTo(new Vector3().setFromEuler(newRotation)) >= 0.01
+    ) {
+      this.selectedObject.rotation.copy(newRotation);
+      this.selectedObject.updateMatrixWorld(true);
+    }
+  }
+
+  UpdateScale() {}
 }
 
 export { ObjectDataPanel };
