@@ -31,10 +31,12 @@ class ObjectDataPanel {
   objectScaleZ;
   constructor() {
     this.objectPanel = this.ObjectPanel();
+    this.objectPanel.setDisplay('none');
   }
 
   ObjectPanel() {
     const container = new UITabbedPanel();
+    container.dom.addEventListener("click", function(event) {event.preventDefault(); event.stopPropagation();})
     container.setId("sidebar");
     const objectProperties = this.ObjectProperties();
     container.addTab("object", "Object", objectProperties);
@@ -156,6 +158,12 @@ class ObjectDataPanel {
     this.objectScaleX.setValue(o.object.scale.x);
     this.objectScaleY.setValue(o.object.scale.y);
     this.objectScaleZ.setValue(o.object.scale.z);
+    this.objectPanel.setDisplay('block');
+
+  }
+
+  Hide(){
+    this.objectPanel.setDisplay('none');
   }
 
   UpdatePosition() {

@@ -79,6 +79,7 @@ class ObjectSelector {
     this.#highlighter.HighlightMesh(event);
     if (this.#isMouseDown) {
       this.#isMouseDragging = true;
+      this.notify();
     }
 
     this.#selectionHelper.onPointerMove(event);
@@ -155,17 +156,23 @@ class ObjectSelector {
       ) {
         this.selectedObject = selectedObject;
         this.#transformControl.attach(selectedObject.object);
-        console.log(this.selectedObject)
+        // console.log(this.selectedObject)
         this.notify();
       }
     } else {
       this.#transformControl.detach();
+      this.selectedObject = null;
+      this.notify();
     }
   }
 
   notify(){
     this.#observers.forEach((observer)=>{
-      observer.Update(this.selectedObject);
+      if(this.selectedObject !== null){
+        observer.Update(this.selectedObject);
+      }else{
+        observer.Hide();
+      }
     });
   }
 

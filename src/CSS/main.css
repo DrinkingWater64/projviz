@@ -476,9 +476,9 @@ select {
 
 #sidebar {
 	position: absolute;
-	right: 0;
-	top: 32px;
-	bottom: 0;
+	right: 10px;
+	top: 40px;
+	bottom: 670px;
 	width: 350px;
 	background: #eee;
 	overflow: auto;

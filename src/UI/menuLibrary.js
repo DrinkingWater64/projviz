@@ -32,9 +32,6 @@ function MenubarLibrary(){
     document.body.appendChild(library.dom)
 
     options.onClick( () => {
-        // window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' );
-
-
 
         const libraryUrl = "https://localhost:7133/api/Model/list";
         fetch(libraryUrl).then(response => {
