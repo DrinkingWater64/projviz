@@ -19,6 +19,7 @@ function MenubarLibrary(){
     option.setTextContent("ADD");
 
     let library = new UIDiv();
+    library.dom.addEventListener("click", (event) => {event.preventDefault(); event.stopPropagation();})
     library.addClass('libray');
     let scrollBox = new UIDiv();
     scrollBox.setClass('scrollable-box');

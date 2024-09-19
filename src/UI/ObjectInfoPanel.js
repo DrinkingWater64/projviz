@@ -36,7 +36,7 @@ class ObjectDataPanel {
 
   ObjectPanel() {
     const container = new UITabbedPanel();
-    container.dom.addEventListener("click", function(event) {event.preventDefault(); event.stopPropagation();})
+    container.dom.addEventListener("click", (event) => {event.preventDefault(); event.stopPropagation();})
     container.setId("sidebar");
     const objectProperties = this.ObjectProperties();
     container.addTab("object", "Object", objectProperties);
