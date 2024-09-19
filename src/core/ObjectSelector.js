@@ -149,21 +149,31 @@ class ObjectSelector {
 
     if (filteredObjects.length > 0) {
       const selectedObject = filteredObjects[0];
-      if (
-        selectedObject.object instanceof Mesh &&
-        (selectedObject.object.tag == this.#tagHelper.tag ||
-          selectedObject.object.parent.tag == this.#tagHelper.tag)
-      ) {
-        this.selectedObject = selectedObject;
-        this.#transformControl.attach(selectedObject.object);
-        // console.log(this.selectedObject)
-        this.notify();
-      }
+      this.SelectObject(selectedObject);
     } else {
-      this.#transformControl.detach();
-      this.selectedObject = null;
-      this.notify();
+      this.DeselectObject();
     }
+  }
+
+  SelectObject(selectedObject) {
+
+    if (
+      selectedObject.object instanceof Mesh &&
+      (selectedObject.object.tag == this.#tagHelper.tag ||
+        selectedObject.object.parent.tag == this.#tagHelper.tag)
+    ) {
+      this.selectedObject = selectedObject;
+      this.#transformControl.attach(selectedObject.object);
+      this.notify();
+    } else {
+      this.DeselectObject();
+    }
+  }
+
+  DeselectObject(){
+    this.#transformControl.detach();
+    this.selectedObject = null;
+    this.notify();
   }
 
   notify(){
