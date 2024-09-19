@@ -67,6 +67,7 @@ class Loader {
 
             loader.parse(contents, "", (result) => {
               const scene = result.scene;
+              scene.traverseVisible((o) => {this.tagHelper.AddTag(o)})
               scene.name = filename;
               scene.animations.push(...result.animations);
               loader.dracoLoader.dispose();
@@ -88,6 +89,7 @@ class Loader {
             const loader = await this.#createGLTFLoader(manager);
             loader.parse(contents, "", (result) => {
               const scene = result.scene;
+              scene.traverseVisible((o) => {this.tagHelper.AddTag(o)})
               scene.name = filename;
               scene.animations.push(...result.animations);
               loader.dracoLoader.dispose();
