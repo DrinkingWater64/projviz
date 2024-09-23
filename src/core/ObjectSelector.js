@@ -84,7 +84,6 @@ class ObjectSelector {
     this.#highlighter.HighlightMesh(event);
     if (this.#isMouseDown) {
       this.#isMouseDragging = true;
-      this.notify();
     }
 
     if (this.#canGroupSelect) {

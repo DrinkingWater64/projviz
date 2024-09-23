@@ -31,7 +31,6 @@ class ObjectDataPanel {
   objectScaleZ;
   constructor() {
     this.objectPanel = this.ObjectPanel();
-    this.objectPanel.setDisplay('none');
   }
 
   ObjectPanel() {
@@ -158,12 +157,6 @@ class ObjectDataPanel {
     this.objectScaleX.setValue(o.object.scale.x);
     this.objectScaleY.setValue(o.object.scale.y);
     this.objectScaleZ.setValue(o.object.scale.z);
-    this.objectPanel.setDisplay('block');
-
-  }
-
-  Hide(){
-    this.objectPanel.setDisplay('none');
   }
 
   UpdatePosition() {
