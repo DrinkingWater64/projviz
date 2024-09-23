@@ -25,14 +25,12 @@ document.body.appendChild(objectDataPanel.objectPanel.dom);
 
 // Scene
 const sceneManager = SceneManagerSingleton.getInstance();
-// const scene = new THREE.Scene();
 const scene = sceneManager.scene;
 scene.background = new THREE.Color(0xbfe3dd);
 
 
 // Renderer
 const canvasManager = CanvasManagerSingleton.getInstance();
-
 const renderer = canvasManager.renderer;
 // Ambient Light
 // const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
@@ -42,16 +40,7 @@ const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(10, 10, 10);
 // light.castShadow = true;
 scene.add(light);
-// light.shadow.normalBias = 0.05;
-// light.shadow.bias = -0.00001;
-// light.shadow.mapSize.width = 2048;
-// light.shadow.mapSize.height = 2048;
-// light.shadow.camera.left = -70;
-// light.shadow.camera.right = 70;
-// light.shadow.camera.top = 70;
-// light.shadow.camera.bottom = -70;
-// light.shadow.camera.near = 0.5;
-// light.shadow.camera.far = 500;
+
 
 const helper = new THREE.DirectionalLightHelper(light, 5);
 scene.add(helper);

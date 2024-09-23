@@ -6,6 +6,7 @@ import SceneManagerSingleton from "../Manager/SceneManager";
 import CanvasManagerSingleton from "../Manager/CanvasManager";
 import Highlighter from "../util/HighLighter";
 class ObjectSelector {
+  #canGroupSelect;
   #isMouseDragging;
   #isMouseDown;
   #mousePos;
@@ -17,8 +18,9 @@ class ObjectSelector {
   #selectionHelper;
   #highlighter;
   selectedObject;
-  #observers
+  #observers;
   constructor(camera) {
+    this.#canGroupSelect = false;
     this.#camera = camera;
     this.#isMouseDragging = false;
     this.#isMouseDown = false;
@@ -37,7 +39,6 @@ class ObjectSelector {
     );
     this / this.#selectionHelper.dispose();
     this.#highlighter = new Highlighter(this.#camera);
-
 
     this.#observers = [];
 
@@ -62,7 +63,11 @@ class ObjectSelector {
     this.#isMouseDown = true;
     this.#isMouseDragging = false;
 
-    if (event.button === 0 && this.#transformControl.axis === null) {
+    if (
+      this.#canGroupSelect &&
+      event.button === 0 &&
+      this.#transformControl.axis === null
+    ) {
       console.log(event.button);
       this.#isMouseDown = true;
       this.#isMouseDragging = false;
@@ -82,54 +87,58 @@ class ObjectSelector {
       this.notify();
     }
 
-    this.#selectionHelper.onPointerMove(event);
-    this.#selectionBox.endPoint.set(
-      (event.clientX / window.innerWidth) * 2 - 1,
-      -(event.clientY / window.innerHeight) * 2 + 1,
-      0.5
-    );
+    if (this.#canGroupSelect) {
+      this.#selectionHelper.onPointerMove(event);
+      this.#selectionBox.endPoint.set(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1,
+        0.5
+      );
 
-    this.#selectionBox.select();
+      this.#selectionBox.select();
+    }
   }
 
   HandleMouseUp(event) {
     this.#isMouseDown = false;
 
-    this.#selectionHelper.onPointerUp();
-    const selectedObjects = this.#selectionBox.select(); // Get selected objects
-    let group = new Group();
-    let groupPos = new Vector3(0, 0, 0);
+    if (this.#canGroupSelect) {
+      this.#selectionHelper.onPointerUp();
+      const selectedObjects = this.#selectionBox.select(); // Get selected objects
+      let group = new Group();
+      let groupPos = new Vector3(0, 0, 0);
 
-    selectedObjects.forEach((object) => {
-      if (object.parent && object.parent.tag === "helper") return;
-      if (object.parent && object.tag === "helper") return;
+      selectedObjects.forEach((object) => {
+        if (object.parent && object.parent.tag === "helper") return;
+        if (object.parent && object.tag === "helper") return;
 
-      if (
-        object instanceof Mesh &&
-        (object.tag == "box" || object.parent.tag == "box")
-      ) {
-        group.add(object);
-        groupPos.add(object.position);
+        if (
+          object instanceof Mesh &&
+          (object.tag == "box" || object.parent.tag == "box")
+        ) {
+          group.add(object);
+          groupPos.add(object.position);
+        }
+      });
+
+      let groupLen = group.children.length;
+      if (groupLen > 0) {
+        groupPos = new Vector3(
+          groupPos.x / groupLen,
+          groupPos.y / groupLen,
+          groupPos.z / groupLen
+        );
+        group.position.copy(groupPos);
+        console.log(groupPos);
+
+        SceneManagerSingleton.getInstance().scene.add(group);
+        this.#transformControl.attach(group);
+        // control.enabled = false;
+      } else {
+        SceneManagerSingleton.getInstance().scene.remove(group);
+        this.#transformControl.detach();
+        // control.enabled = true;
       }
-    });
-
-    let groupLen = group.children.length;
-    if (groupLen > 0) {
-      groupPos = new Vector3(
-        groupPos.x / groupLen,
-        groupPos.y / groupLen,
-        groupPos.z / groupLen
-      );
-      group.position.copy(groupPos);
-      console.log(groupPos);
-
-      SceneManagerSingleton.getInstance().scene.add(group);
-      this.#transformControl.attach(group);
-      // control.enabled = false;
-    } else {
-      SceneManagerSingleton.getInstance().scene.remove(group);
-      this.#transformControl.detach();
-      // control.enabled = true;
     }
   }
 
@@ -156,7 +165,6 @@ class ObjectSelector {
   }
 
   SelectObject(selectedObject) {
-
     if (
       selectedObject.object instanceof Mesh &&
       (selectedObject.object.tag == this.#tagHelper.tag ||
@@ -170,33 +178,33 @@ class ObjectSelector {
     }
   }
 
-  DeselectObject(){
+  DeselectObject() {
     this.#transformControl.detach();
     this.selectedObject = null;
     this.notify();
   }
 
-  notify(){
-    this.#observers.forEach((observer)=>{
-      if(this.selectedObject !== null){
+  notify() {
+    this.#observers.forEach((observer) => {
+      if (this.selectedObject !== null) {
         observer.Update(this.selectedObject);
-      }else{
+      } else {
         observer.Hide();
       }
     });
   }
 
-  subscribe(o){
+  subscribe(o) {
     this.#observers.push(o);
   }
 
-  unsubscribe(o){
+  unsubscribe(o) {
     [...this.#observers].forEach((observer, index) => {
-      if(observer === o) {
+      if (observer === o) {
         this.#observers.splice(index, 1);
       }
     });
-  } 
+  }
 }
 
 export default ObjectSelector;
