@@ -264,7 +264,7 @@ class UIInput extends UIElement {
 
     this.dom.className = "Input";
     this.dom.style.padding = "2px";
-    this.dom.style.border = "1px solid transparent";
+    this.dom.style.border = "1px solid ";
 
     this.dom.setAttribute("autocomplete", "off");
 

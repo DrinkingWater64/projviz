@@ -70,7 +70,7 @@ function UploadMenu() {
   panel.add(scrollBox);
 
 
-  const nameInput = new UIInput("Name");
+  const nameInput = new UIInput("Name").setClass('');
   scrollBox.add(nameInput);
   const categoryInput = new UIInput("Category");
   scrollBox.add(categoryInput);
