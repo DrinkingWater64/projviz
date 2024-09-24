@@ -1,4 +1,4 @@
-import { UIPanel, UIRow } from "./ui";
+import { UIDiv, UIPanel, UIRow, UIButton, UIInput, UIFileInput } from "./ui";
 import { Loader } from "../core/Loader";
 
 function MenubarFile() {
@@ -6,6 +6,8 @@ function MenubarFile() {
 
   const container = new UIPanel();
   container.setClass("menu");
+
+  const uploadPanel = new UploadMenu();
 
   const title = new UIPanel();
   title.setClass("title");
@@ -29,15 +31,81 @@ function MenubarFile() {
   });
   form.appendChild(fileInput);
 
-  let option = new UIRow();
-  option.setClass("option");
-  option.setTextContent("Import");
-  option.onClick(function () {
+  let importOption = new UIRow();
+  importOption.setClass("option");
+  importOption.setTextContent("Import");
+  importOption.onClick(function () {
     fileInput.click();
   });
-  options.add(option);
+  options.add(importOption);
+
+  let uploadOption = new UIRow();
+  uploadOption.setClass("option");
+  uploadOption.setTextContent("Upoad");
+  uploadOption.onClick(function () {
+    // fileInput.click();
+    uploadPanel.setDisplay("block");
+  });
+  options.add(uploadOption);
 
   return container;
+}
+
+function UploadMenu() {
+  const panel = new UIDiv();
+  panel.setClass("libray");
+  panel.setDisplay("none");
+  const closeButton = new UIButton("x").setClass('close-btn');
+  closeButton.onClick(() => {
+    panel.setDisplay('none');
+  })
+
+
+  const scrollBox = new UIDiv();
+  scrollBox.setClass("upload-box");
+  const fileInput = new UIFileInput();
+  scrollBox.add(fileInput);
+
+  panel.add(closeButton);
+  panel.add(scrollBox);
+
+
+  const nameInput = new UIInput("Name");
+  scrollBox.add(nameInput);
+  const categoryInput = new UIInput("Category");
+  scrollBox.add(categoryInput);
+  const uploadButton = new UIButton("Upload");
+  scrollBox.add(uploadButton);
+
+  uploadButton.onClick(() => {
+    let formData = new FormData();
+    formData.append("modelFile", fileInput.dom.files[0]);
+    formData.append("name", nameInput.getValue());
+    formData.append("category", categoryInput.getValue());
+
+    fetch("https://localhost:7133/api/Model/upload", {
+      method: "POST",
+      body: formData,
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Model Uploaded successfully", data);
+      // You can also alert the user or update the UI after a successful upload
+    })
+    .catch((error) => {
+      console.error("Error uploading model:", error);
+      alert(`Failed to upload model: ${error.message}`);
+    });
+
+  });
+
+  document.body.appendChild(panel.dom);
+  return panel;
 }
 
 export { MenubarFile };

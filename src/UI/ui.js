@@ -246,6 +246,18 @@ class UIText extends UISpan {
   }
 }
 
+class UIFileInput extends UIElement{
+  constructor(text){
+    super(document.createElement("input"));
+
+    this.dom.type = "file";
+    this.dom.className = "Input";
+    this.dom.style.padding = "2px";
+    this.dom.style.border = "1px solid";
+  }
+
+}
+
 class UIInput extends UIElement {
   constructor(text) {
     super(document.createElement("input"));
@@ -1079,6 +1091,7 @@ export {
   UIRow,
   UIPanel,
   UIText,
+  UIFileInput,
   UIInput,
   UITextArea,
   UISelect,

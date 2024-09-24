@@ -32,7 +32,7 @@ function MenubarLibrary(){
     library.setDisplay('none');
     document.body.appendChild(library.dom)
 
-    options.onClick( () => {
+    option.onClick( () => {
         // window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' );
 
 

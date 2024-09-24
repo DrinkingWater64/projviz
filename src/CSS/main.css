@@ -846,6 +846,38 @@ select {
     color: #000;
 }
 
+
+.upload-box {
+	margin-top: 32px;
+    max-height: 100px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.upload-box button {
+	/* display: block; */
+	margin: 5px;
+	width: 30%;
+	margin-bottom: 10px;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #f0f0f0;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+.upload-box button:hover {
+    background-color: #98bee8; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+}
+
+.upload-box button:active {
+    background-color: #0056b3; /* Background color on click */
+    color: #fff; /* Text color on click */
+}
+
+
+
 /* Temporary Chrome fix (#24794) */
 
 [draggable="true"] {

@@ -31,6 +31,7 @@ class ObjectDataPanel {
   objectScaleZ;
   constructor() {
     this.objectPanel = this.ObjectPanel();
+    this.Hide();
   }
 
   ObjectPanel() {
@@ -157,6 +158,8 @@ class ObjectDataPanel {
     this.objectScaleX.setValue(o.object.scale.x);
     this.objectScaleY.setValue(o.object.scale.y);
     this.objectScaleZ.setValue(o.object.scale.z);
+
+    this.Show();
   }
 
   UpdatePosition() {
@@ -198,6 +201,14 @@ class ObjectDataPanel {
       this.selectedObject.scale.copy(scale);
       this.selectedObject.updateMatrixWorld(true);
     }
+  }
+
+  Hide() {
+    this.objectPanel.setDisplay('none');
+  }
+
+  Show() {
+    this.objectPanel.setDisplay('block');
   }
 }
 
