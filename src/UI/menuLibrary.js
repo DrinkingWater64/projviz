@@ -34,7 +34,7 @@ function MenubarLibrary(){
 
     option.onClick( () => {
         // window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' );
-
+        scrollBox.clear();
 
 
         const libraryUrl = "https://localhost:7133/api/Model/list";
