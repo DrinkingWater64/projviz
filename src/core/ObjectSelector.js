@@ -5,6 +5,7 @@ import { SelectionBox, SelectionHelper } from "three/examples/jsm/Addons.js";
 import SceneManagerSingleton from "../Manager/SceneManager";
 import CanvasManagerSingleton from "../Manager/CanvasManager";
 import Highlighter from "../util/HighLighter";
+import { gosper } from "three/examples/jsm/utils/GeometryUtils.js";
 class ObjectSelector {
   #canGroupSelect;
   #isMouseDragging;
@@ -56,6 +57,12 @@ class ObjectSelector {
 
     window.addEventListener("click", (event) => {
       this.HandleOnClick(event);
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Delete") {
+        this.delete();
+      }
     });
   }
 
@@ -204,6 +211,41 @@ class ObjectSelector {
         this.#observers.splice(index, 1);
       }
     });
+  }
+
+  delete() {
+    if (this.selectedObject) {
+      let objectToRemove = this.selectedObject;
+      console.log(objectToRemove);
+      this.DeselectObject();
+      console.log(objectToRemove);
+      if (objectToRemove.isMesh) {
+        SceneManagerSingleton.getInstance().scene.remove(objectToRemove)
+        console.log(objectToRemove);
+        this.removeObjectAndChildren(objectToRemove);
+      }else if(objectToRemove.object && objectToRemove.object.isMesh){
+        SceneManagerSingleton.getInstance().scene.remove(objectToRemove.object)
+        console.log(objectToRemove);
+        this.removeObjectAndChildren(objectToRemove.object);
+      }
+
+    }
+  }
+
+  removeObjectAndChildren(object) {
+    object.traverse((child) => {
+      if (child.geometry) child.geometry.dispose();
+
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((material) => material.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+
+    object.parent.remove(object);
   }
 }
 
