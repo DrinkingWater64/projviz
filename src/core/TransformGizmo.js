@@ -15,8 +15,11 @@ class TransformGizmo extends TransformControls {
         this.setMode("rotate");
         break;
       case "r":
-        // this.setMode("scale");
         this.setMode("scale");
+        break;
+      case "q":
+        console.log("q");
+        this.visible = !this.visible;
         break;
     }
   }
