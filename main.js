@@ -26,7 +26,7 @@ document.body.appendChild(objectDataPanel.objectPanel.dom);
 // Scene
 const sceneManager = SceneManagerSingleton.getInstance();
 const scene = sceneManager.scene;
-scene.background = new THREE.Color(0xbfe3dd);
+scene.background = new THREE.Color(0x000000);
 
 
 // Renderer

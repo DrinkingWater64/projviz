@@ -7,7 +7,7 @@ class GridView {
   #divisions
   #color1
   #color2
-  constructor(size = 10, divisions = 10, color1 = 0x444444, color2 = 0x888888) {
+  constructor(size = 10, divisions = 10, color1 = 0xFFFFFF, color2 = 0xFFFFFF) {
     this.#size = size
     this.#divisions = divisions
     this.#color1 = color1
