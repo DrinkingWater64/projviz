@@ -6,7 +6,7 @@ import MainControl from "./src/core/MainControl";
 import SceneManagerSingleton from "./src/Manager/SceneManager";
 import CanvasManagerSingleton from "./src/Manager/CanvasManager";
 import ObjectSelector from "./src/core/ObjectSelector";
-
+import { Loader } from "./src/core/Loader";
 import { Menubar } from "./src/UI/menubar";
 import { ObjectDataPanel } from "./src/UI/ObjectInfoPanel";
 import { Viewport } from "./src/core/Viewport";
@@ -56,7 +56,11 @@ const camera = new THREE.PerspectiveCamera(
 camera.near = 0.01;
 camera.far = 2000;
 camera.updateProjectionMatrix();
-camera.position.z = 10;
+camera.position.x = 0
+camera.position.y = 4.5
+camera.position.z = 0;
+
+// 0.9591308670267162, z: -2.704799149790561}
 scene.add(camera);
 
 //Control
@@ -67,23 +71,11 @@ objectSelector.subscribe(objectDataPanel)
 // Grid helper
 const gridHelper = new GridView(50, 10);
 
-// Load model
-const boxTag = new TagHelper("box");
 
-const loader = new GLTFLoader();
-const LoadModel = (path, gLTFLoader) => {
-  gLTFLoader.load(path, (gltf) => {
-    boxTag.AddTag(gltf.scene);
-    gltf.scene.castShadow = true;
-    gltf.scene.receiveShadow = true;
-    gltf.scene.traverse((child) => {
-      child.castShadow = true;
-      child.receiveShadow = true;
-    });
-    scene.add(gltf.scene);
-  });
-};
-// LoadModel("https://localhost:7133/api/Model/roomBaked.glb", loader);
+const loader = new Loader();
+loader.loadFromServer("/api/model/bigRoom.glb")
+
+
 
 // Function calls------------------------------------------------------------------------------------------------------------------------
 

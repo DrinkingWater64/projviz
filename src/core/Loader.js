@@ -3,6 +3,7 @@ import { LoaderUtils } from "../util/LoaderUtils";
 import { TGALoader } from "three/examples/jsm/Addons.js";
 import SceneManagerSingleton from "../Manager/SceneManager";
 import TagHelper from "../util/TagHelper";
+import { BoxHelper } from "three";
 
 class Loader {
   texturePath;
@@ -67,7 +68,9 @@ class Loader {
 
             loader.parse(contents, "", (result) => {
               const scene = result.scene;
-              scene.traverseVisible((o) => {this.tagHelper.AddTag(o)})
+              scene.traverseVisible((o) => {
+                this.tagHelper.AddTag(o);
+              })
               scene.name = filename;
               scene.animations.push(...result.animations);
               loader.dracoLoader.dispose();
@@ -109,6 +112,10 @@ class Loader {
     }
   }
 
+  /**
+   * path url of a model
+   * @param {String} url 
+   */
   async loadFromServer(url) {
     url = 'https://localhost:7133' + url;
     const manager = new THREE.LoadingManager();
@@ -122,7 +129,17 @@ class Loader {
           url,
           (result) => {
             const scene = result.scene;
-            scene.traverseVisible((o) => {this.tagHelper.AddTag(o)})
+            scene.traverseVisible((o) => {
+              // console.log(o);
+              if(o.name === 'bound'){
+                o.visible = false;
+                SceneManagerSingleton.getInstance().cameraBoundBox = new THREE.Box3().setFromObject(o);
+                console.log(new THREE.Box3().setFromObject(o))
+              }
+              else{
+                this.tagHelper.AddTag(o);
+              }
+            })
             scene.name = url.split("/").pop();
             scene.animations.push(...result.animations);
             SceneManagerSingleton.getInstance().scene.add(scene);

@@ -1,13 +1,17 @@
 import { Scene } from "three";
 
 class SceneManager {
-  scene
+  _scene
+  cameraBoundBox
   constructor() {
-    this.scene = new Scene()
+    this._scene = new Scene()
+    this.cameraBoundBox = null
   }
 
+  set cameraBoundBox(box){}
+  
   get scene() {
-    return this.scene
+    return this._scene
   }
 }
 
