@@ -27,7 +27,6 @@ function MenubarFile() {
   fileInput.type = "file";
   fileInput.addEventListener("change", () => {
     loader.loadFiles(fileInput.files);
-    console.log("hello");
   });
   form.appendChild(fileInput);
 
