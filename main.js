@@ -73,7 +73,7 @@ const gridHelper = new GridView(50, 10);
 
 
 const loader = new Loader();
-loader.loadFromServer("/api/model/bigRoom.glb")
+loader.loadFromServer({fileUrl:"/api/model/bigRoom.glb", name: "Room"})
 
 
 

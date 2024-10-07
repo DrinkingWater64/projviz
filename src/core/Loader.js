@@ -116,8 +116,9 @@ class Loader {
    * path url of a model
    * @param {String} url 
    */
-  async loadFromServer(url) {
-    url = 'https://localhost:7133' + url;
+  async loadFromServer(model) {
+    console.log(model)
+    const url = 'https://localhost:7133' + model.fileUrl;
     const manager = new THREE.LoadingManager();
     const fileExtension = url.split(".").pop().toLowerCase();
 
@@ -139,7 +140,7 @@ class Loader {
               }
               
             })
-            scene.name = url.split("/").pop();
+            scene.name = model.name;
             scene.animations.push(...result.animations);
             SceneManagerSingleton.getInstance().scene.add(scene);
             loader.dracoLoader.dispose();

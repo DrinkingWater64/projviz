@@ -143,21 +143,40 @@ class ObjectDataPanel {
   }
 
   Update(o) {
-    this.selectedObject = o.object;
-    this.objectNameText.setValue(o.object.name);
-    this.objectTypeText.setValue(o.object.type);
 
-    this.objectPositionX.setValue(o.object.position.x);
-    this.objectPositionY.setValue(o.object.position.y);
-    this.objectPositionZ.setValue(o.object.position.z);
 
-    this.objectRotationX.setValue(o.object.rotation.x);
-    this.objectRotationY.setValue(o.object.rotation.y);
-    this.objectRotationZ.setValue(o.object.rotation.z);
+    this.selectedObject = o;
+    this.objectNameText.setValue(o.name);
+    this.objectTypeText.setValue(o.type);
 
-    this.objectScaleX.setValue(o.object.scale.x);
-    this.objectScaleY.setValue(o.object.scale.y);
-    this.objectScaleZ.setValue(o.object.scale.z);
+    this.objectPositionX.setValue(o.position.x);
+    this.objectPositionY.setValue(o.position.y);
+    this.objectPositionZ.setValue(o.position.z);
+
+    this.objectRotationX.setValue(o.rotation.x);
+    this.objectRotationY.setValue(o.rotation.y);
+    this.objectRotationZ.setValue(o.rotation.z);
+
+    this.objectScaleX.setValue(o.scale.x);
+    this.objectScaleY.setValue(o.scale.y);
+    this.objectScaleZ.setValue(o.scale.z);
+
+
+    // this.selectedObject = o.object;
+    // this.objectNameText.setValue(o.object.name);
+    // this.objectTypeText.setValue(o.object.type);
+
+    // this.objectPositionX.setValue(o.object.position.x);
+    // this.objectPositionY.setValue(o.object.position.y);
+    // this.objectPositionZ.setValue(o.object.position.z);
+
+    // this.objectRotationX.setValue(o.object.rotation.x);
+    // this.objectRotationY.setValue(o.object.rotation.y);
+    // this.objectRotationZ.setValue(o.object.rotation.z);
+
+    // this.objectScaleX.setValue(o.object.scale.x);
+    // this.objectScaleY.setValue(o.object.scale.y);
+    // this.objectScaleZ.setValue(o.object.scale.z);
 
     this.Show();
   }

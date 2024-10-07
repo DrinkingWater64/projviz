@@ -48,7 +48,7 @@ function MenubarLibrary(){
             data.forEach(model => {
                 let button = new UIButton(model.name)
                 button.onClick(()=>{
-                    loader.loadFromServer(model.fileUrl)
+                    loader.loadFromServer(model)
                 })
                 scrollBox.add(button)
             });

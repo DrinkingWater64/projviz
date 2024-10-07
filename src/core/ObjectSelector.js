@@ -5,7 +5,7 @@ import { SelectionBox, SelectionHelper } from "three/examples/jsm/Addons.js";
 import SceneManagerSingleton from "../Manager/SceneManager";
 import CanvasManagerSingleton from "../Manager/CanvasManager";
 import Highlighter from "../util/HighLighter";
-import { gosper } from "three/examples/jsm/utils/GeometryUtils.js";
+
 class ObjectSelector {
   #canGroupSelect;
   #isMouseDragging;
@@ -172,17 +172,34 @@ class ObjectSelector {
   }
 
   SelectObject(selectedObject) {
+
+
+    let objectToSelect = this.#FindParent(selectedObject.object);
+
+
+
     if (
-      selectedObject.object instanceof Mesh &&
-      (selectedObject.object.tag == this.#tagHelper.tag ||
-        selectedObject.object.parent.tag == this.#tagHelper.tag)
+      (objectToSelect.tag == this.#tagHelper.tag ||
+        objectToSelect.parent?.tag == this.#tagHelper.tag)
     ) {
-      this.selectedObject = selectedObject;
-      this.#transformControl.attach(selectedObject.object);
+      this.selectedObject = objectToSelect;
+      this.#transformControl.attach(objectToSelect);
       this.notify();
     } else {
       this.DeselectObject();
     }
+  }
+
+  #FindParent(o){
+
+    let objectToSelect = o;
+
+    while(objectToSelect.parent !== SceneManagerSingleton.getInstance().scene){
+      objectToSelect = objectToSelect.parent
+      console.log(objectToSelect)
+    }
+
+    return objectToSelect
   }
 
   DeselectObject() {
