@@ -130,15 +130,14 @@ class Loader {
           (result) => {
             const scene = result.scene;
             scene.traverseVisible((o) => {
-              // console.log(o);
               if(o.name === 'bound'){
                 o.visible = false;
+                o.tag = null;
                 SceneManagerSingleton.getInstance().cameraBoundBox = new THREE.Box3().setFromObject(o);
-                console.log(new THREE.Box3().setFromObject(o))
-              }
-              else{
+              }else{
                 this.tagHelper.AddTag(o);
               }
+              
             })
             scene.name = url.split("/").pop();
             scene.animations.push(...result.animations);

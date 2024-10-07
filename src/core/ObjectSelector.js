@@ -193,7 +193,7 @@ class ObjectSelector {
 
   notify() {
     this.#observers.forEach((observer) => {
-      if (this.selectedObject !== null) {
+      if (this.selectedObject) {
         observer.Update(this.selectedObject);
       } else {
         observer.Hide();
