@@ -88,7 +88,7 @@ class ObjectSelector {
   }
 
   HandleMouseMove(event) {
-    this.#highlighter.HighlightMesh(event);
+    // this.#highlighter.HighlightMesh(event);
     if (this.#isMouseDown) {
       this.#isMouseDragging = true;
       this.notify();
@@ -236,14 +236,14 @@ class ObjectSelector {
       console.log(objectToRemove);
       this.DeselectObject();
       console.log(objectToRemove);
-      if (objectToRemove.isMesh) {
+      if (objectToRemove) {
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove)
         console.log(objectToRemove);
-        this.removeObjectAndChildren(objectToRemove);
-      }else if(objectToRemove.object && objectToRemove.object.isMesh){
+        // this.removeObjectAndChildren(objectToRemove);
+      }else if(objectToRemove.object){
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove.object)
         console.log(objectToRemove);
-        this.removeObjectAndChildren(objectToRemove.object);
+        // this.removeObjectAndChildren(objectToRemove.object);
       }
 
     }

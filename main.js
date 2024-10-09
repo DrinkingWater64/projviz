@@ -10,6 +10,7 @@ import { Loader } from "./src/core/Loader";
 import { Menubar } from "./src/UI/menubar";
 import { ObjectDataPanel } from "./src/UI/ObjectInfoPanel";
 import { Viewport } from "./src/core/Viewport";
+import { RectAreaLightHelper } from "three/examples/jsm/Addons.js";
 
 const viewport = new Viewport();
 document.body.appendChild(viewport.dom);
@@ -33,17 +34,55 @@ scene.background = new THREE.Color(0x000000);
 const canvasManager = CanvasManagerSingleton.getInstance();
 const renderer = canvasManager.renderer;
 // Ambient Light
-// const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+// const ambientLight = new THREE.AmbientLight(0xffffff, 2);
 // scene.add(ambientLight);
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(10, 10, 10);
-// light.castShadow = true;
-scene.add(light);
+
+// scene light
+// const alight1 = new THREE.RectAreaLight(0xffffff, 2, 6, 2);
+// alight1.lookAt(0, -1, 0)
+// alight1.position.set(0, 2.5, 0)
+// scene.add(alight1);
 
 
-const helper = new THREE.DirectionalLightHelper(light, 5);
-scene.add(helper);
+const pligt1 = new THREE.PointLight(0xffffff, 2);
+pligt1.position.set(2.5, 2, 1.5)
+scene.add(pligt1);
+
+// const plight2 = new THREE.PointLight(0xffffff, 2);
+// plight2.position.set(0, 2, 1.5);
+// scene.add(plight2);
+
+const plight3 = new THREE.PointLight(0xffffff, 2);
+plight3.position.set(-2.5, 2, 1.5);
+scene.add(plight3);
+
+// const pligt4 = new THREE.PointLight(0xffffff, 2);
+// pligt4.position.set(2.5, 2, -1.5)
+// scene.add(pligt4);
+
+// const plight5 = new THREE.PointLight(0xffffff, 2);
+// plight5.position.set(0, 1.5, -1);
+// scene.add(plight5);
+
+const alight5 = new THREE.RectAreaLight(0xffffff, 1, 2, 4);
+alight5.position.set(0, 1.5, -1);
+alight5.lookAt(0, 0, -1)
+scene.add(alight5);
+
+const alight5h = new RectAreaLightHelper(alight5)
+alight5.add(alight5h)
+
+
+// const plight6 = new THREE.PointLight(0xffffff, 2);
+// plight6.position.set(-2.5, 2, -1.5);
+// scene.add(plight6);
+
+// const rlHelper = new RectAreaLightHelper(plight1)
+// plight1.add(rlHelper);
+
+
+
 
 
 //camera
