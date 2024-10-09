@@ -44,7 +44,7 @@ const renderer = canvasManager.renderer;
 // alight1.position.set(0, 2.5, 0)
 // scene.add(alight1);
 
-
+//.......................
 const pligt1 = new THREE.PointLight(0xffffff, 2);
 pligt1.position.set(2.5, 2, 1.5)
 scene.add(pligt1);
@@ -53,6 +53,7 @@ scene.add(pligt1);
 // plight2.position.set(0, 2, 1.5);
 // scene.add(plight2);
 
+//................
 const plight3 = new THREE.PointLight(0xffffff, 2);
 plight3.position.set(-2.5, 2, 1.5);
 scene.add(plight3);
@@ -65,13 +66,14 @@ scene.add(plight3);
 // plight5.position.set(0, 1.5, -1);
 // scene.add(plight5);
 
+//..........................
 const alight5 = new THREE.RectAreaLight(0xffffff, 1, 2, 4);
 alight5.position.set(0, 1.5, -1);
 alight5.lookAt(0, 0, -1)
 scene.add(alight5);
 
-const alight5h = new RectAreaLightHelper(alight5)
-alight5.add(alight5h)
+// const alight5h = new RectAreaLightHelper(alight5)
+// alight5.add(alight5h)
 
 
 // const plight6 = new THREE.PointLight(0xffffff, 2);

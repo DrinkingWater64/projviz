@@ -93,7 +93,7 @@ function UploadMenu() {
       return response.json();
     })
     .then((data) => {
-      console.log("Model Uploaded successfully", data);
+      // console.log("Model Uploaded successfully", data);
       // You can also alert the user or update the UI after a successful upload
     })
     .catch((error) => {

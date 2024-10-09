@@ -75,7 +75,7 @@ class ObjectSelector {
       event.button === 0 &&
       this.#transformControl.axis === null
     ) {
-      console.log(event.button);
+      // console.log(event.button);
       this.#isMouseDown = true;
       this.#isMouseDragging = false;
       this.#selectionHelper.onPointerDown(event);
@@ -136,7 +136,7 @@ class ObjectSelector {
           groupPos.z / groupLen
         );
         group.position.copy(groupPos);
-        console.log(groupPos);
+        // console.log(groupPos);
 
         SceneManagerSingleton.getInstance().scene.add(group);
         this.#transformControl.attach(group);
@@ -196,7 +196,7 @@ class ObjectSelector {
 
     while(objectToSelect.parent !== SceneManagerSingleton.getInstance().scene){
       objectToSelect = objectToSelect.parent
-      console.log(objectToSelect)
+      // console.log(objectToSelect)
     }
 
     return objectToSelect
@@ -233,16 +233,16 @@ class ObjectSelector {
   delete() {
     if (this.selectedObject) {
       let objectToRemove = this.selectedObject;
-      console.log(objectToRemove);
+      // console.log(objectToRemove);
       this.DeselectObject();
-      console.log(objectToRemove);
+      // console.log(objectToRemove);
       if (objectToRemove) {
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove)
-        console.log(objectToRemove);
+        // console.log(objectToRemove);
         // this.removeObjectAndChildren(objectToRemove);
       }else if(objectToRemove.object){
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove.object)
-        console.log(objectToRemove);
+        // console.log(objectToRemove);
         // this.removeObjectAndChildren(objectToRemove.object);
       }
 

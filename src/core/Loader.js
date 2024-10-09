@@ -30,7 +30,7 @@ class Loader {
         url = url.replace(/^(\.?\/)/, "");
         const file = filesMap[url];
         if (file) {
-          console.log("loading ", url);
+          // console.log("loading ", url);
           return URL.createObjectURL(file);
         }
         return url;
@@ -56,7 +56,7 @@ class Loader {
         ) +
         " KB)";
       const progress = Math.floor((event.loaded / event.total) * 100) + "%";
-      console.log("Loading", filename, size, progress);
+      // console.log("Loading", filename, size, progress);
     });
     switch (extension) {
       case "glb": {
@@ -117,7 +117,7 @@ class Loader {
    * @param {String} url 
    */
   async loadFromServer(model) {
-    console.log(model)
+    // console.log(model)
     const url = 'https://localhost:7133' + model.fileUrl;
     const manager = new THREE.LoadingManager();
     const fileExtension = url.split(".").pop().toLowerCase();
@@ -145,7 +145,7 @@ class Loader {
             SceneManagerSingleton.getInstance().scene.add(scene);
             loader.dracoLoader.dispose();
             loader.ktx2Loader.dispose();
-            console.log(scene)
+            // console.log(scene)
 
           },
           (xhr) => {
