@@ -37,7 +37,7 @@ function MenubarLibrary(){
         scrollBox.clear();
 
 
-        const libraryUrl = "https://localhost:7133/api/Model/list";
+        const libraryUrl = "http://202.4.127.188:8044/api/Model/list";
         fetch(libraryUrl).then(response => {
             if(!response.ok){
                 throw new Error("Response was not OK")

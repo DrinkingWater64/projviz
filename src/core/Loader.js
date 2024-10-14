@@ -118,7 +118,7 @@ class Loader {
    */
   async loadFromServer(model) {
     // console.log(model)
-    const url = 'https://localhost:7133' + model.fileUrl;
+    const url = 'http://202.4.127.188:8044' + model.fileUrl;
     const manager = new THREE.LoadingManager();
     const fileExtension = url.split(".").pop().toLowerCase();
 

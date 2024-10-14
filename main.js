@@ -11,6 +11,11 @@ import { Menubar } from "./src/UI/menubar";
 import { ObjectDataPanel } from "./src/UI/ObjectInfoPanel";
 import { Viewport } from "./src/core/Viewport";
 import { RectAreaLightHelper } from "three/examples/jsm/Addons.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
+
+// const stats = new Stats();
+// document.body.appendChild(stats.dom);
+// stats.dom.style.pointerEvents = 'none';
 
 const viewport = new Viewport();
 document.body.appendChild(viewport.dom);
@@ -122,8 +127,10 @@ loader.loadFromServer({fileUrl:"/api/model/bigRoom.glb", name: "Room"})
 
 const animate = () => {
   requestAnimationFrame(animate);
+  // stats.begin()
   control.update();
   renderer.render(scene, camera);
+  // stats.end()
 };
 animate();
 
@@ -141,8 +148,5 @@ window.addEventListener("resize", onWindowResize);
  * Loads model in console
  * @param {Strin} name
  */
-export const LMC = (name) => {
-  LoadModel("https://localhost:7133/api/Model/" + name + ".glb", loader);
-};
 
 window.LMC = LMC;
