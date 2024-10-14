@@ -5,7 +5,7 @@ import { SelectionBox, SelectionHelper } from "three/examples/jsm/Addons.js";
 import SceneManagerSingleton from "../Manager/SceneManager";
 import CanvasManagerSingleton from "../Manager/CanvasManager";
 import Highlighter from "../util/HighLighter";
-import { gosper } from "three/examples/jsm/utils/GeometryUtils.js";
+
 class ObjectSelector {
   #canGroupSelect;
   #isMouseDragging;
@@ -75,7 +75,7 @@ class ObjectSelector {
       event.button === 0 &&
       this.#transformControl.axis === null
     ) {
-      console.log(event.button);
+      // console.log(event.button);
       this.#isMouseDown = true;
       this.#isMouseDragging = false;
       this.#selectionHelper.onPointerDown(event);
@@ -88,7 +88,7 @@ class ObjectSelector {
   }
 
   HandleMouseMove(event) {
-    this.#highlighter.HighlightMesh(event);
+    // this.#highlighter.HighlightMesh(event);
     if (this.#isMouseDown) {
       this.#isMouseDragging = true;
       this.notify();
@@ -136,7 +136,7 @@ class ObjectSelector {
           groupPos.z / groupLen
         );
         group.position.copy(groupPos);
-        console.log(groupPos);
+        // console.log(groupPos);
 
         SceneManagerSingleton.getInstance().scene.add(group);
         this.#transformControl.attach(group);
@@ -172,17 +172,34 @@ class ObjectSelector {
   }
 
   SelectObject(selectedObject) {
+
+
+    let objectToSelect = this.#FindParent(selectedObject.object);
+
+
+
     if (
-      selectedObject.object instanceof Mesh &&
-      (selectedObject.object.tag == this.#tagHelper.tag ||
-        selectedObject.object.parent.tag == this.#tagHelper.tag)
+      (objectToSelect.tag == this.#tagHelper.tag ||
+        objectToSelect.parent?.tag == this.#tagHelper.tag)
     ) {
-      this.selectedObject = selectedObject;
-      this.#transformControl.attach(selectedObject.object);
+      this.selectedObject = objectToSelect;
+      this.#transformControl.attach(objectToSelect);
       this.notify();
     } else {
       this.DeselectObject();
     }
+  }
+
+  #FindParent(o){
+
+    let objectToSelect = o;
+
+    while(objectToSelect.parent !== SceneManagerSingleton.getInstance().scene){
+      objectToSelect = objectToSelect.parent
+      // console.log(objectToSelect)
+    }
+
+    return objectToSelect
   }
 
   DeselectObject() {
@@ -193,7 +210,7 @@ class ObjectSelector {
 
   notify() {
     this.#observers.forEach((observer) => {
-      if (this.selectedObject !== null) {
+      if (this.selectedObject) {
         observer.Update(this.selectedObject);
       } else {
         observer.Hide();
@@ -216,17 +233,17 @@ class ObjectSelector {
   delete() {
     if (this.selectedObject) {
       let objectToRemove = this.selectedObject;
-      console.log(objectToRemove);
+      // console.log(objectToRemove);
       this.DeselectObject();
-      console.log(objectToRemove);
-      if (objectToRemove.isMesh) {
+      // console.log(objectToRemove);
+      if (objectToRemove) {
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove)
-        console.log(objectToRemove);
-        this.removeObjectAndChildren(objectToRemove);
-      }else if(objectToRemove.object && objectToRemove.object.isMesh){
+        // console.log(objectToRemove);
+        // this.removeObjectAndChildren(objectToRemove);
+      }else if(objectToRemove.object){
         SceneManagerSingleton.getInstance().scene.remove(objectToRemove.object)
-        console.log(objectToRemove);
-        this.removeObjectAndChildren(objectToRemove.object);
+        // console.log(objectToRemove);
+        // this.removeObjectAndChildren(objectToRemove.object);
       }
 
     }

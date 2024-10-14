@@ -25,7 +25,7 @@ class DebugDraw {
     const material = new THREE.LineBasicMaterial({color: this.#color})
     const rayLine = new THREE.Line(geometry, material)
     SceneManagerSingleton.getInstance().scene.add(rayLine)
-    console.log("draw")
+    // console.log("draw")
   }
 
   DrawImpact(raycaster){

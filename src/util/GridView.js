@@ -23,7 +23,7 @@ class GridView {
     SceneManagerSingleton.getInstance().scene.remove(this.#gridHelper)
     this.#gridHelper = new GridHelper(this.#size, this.#divisions, this.#color1, this.#color2)
     SceneManagerSingleton.getInstance().scene.add(this.#gridHelper)
-    console.log("Update grid" + this.#size)
+    // console.log("Update grid" + this.#size)
   }
 
   set size(value) {
@@ -49,7 +49,7 @@ class GridView {
   ToggleGrid(event){
     if (event.key === "g") {
       this.#gridHelper.visible = !this.#gridHelper.visible;
-      console.log("pressed G")
+      // console.log("pressed G")
     }
   }
 }

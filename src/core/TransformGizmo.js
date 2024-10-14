@@ -18,7 +18,7 @@ class TransformGizmo extends TransformControls {
         this.setMode("scale");
         break;
       case "q":
-        console.log("q");
+        // console.log("q");
         this.visible = !this.visible;
         break;
     }
