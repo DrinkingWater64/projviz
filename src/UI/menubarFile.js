@@ -82,7 +82,7 @@ function UploadMenu() {
     formData.append("name", nameInput.getValue());
     formData.append("category", categoryInput.getValue());
 
-    fetch("https://localhost:7133/api/Model/upload", {
+    fetch('http://202.4.127.188:8044/api/Model/upload', {
       method: "POST",
       body: formData,
     })
