@@ -26,7 +26,7 @@ Projviz is an advanced web-based 3D visualization tool designed to facilitate th
 To deploy and run Projviz locally, follow these steps:
 
    ```bash
-   git clone https://github.com/yourusername/projviz.git
+   git clone https://github.com/DrinkingWater64/projviz.git
    cd projviz
    npm i
    npm run dev
